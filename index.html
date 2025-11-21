@@ -112,6 +112,8 @@
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
+        console.log("Habadabaduu");
+
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
               }).then((unityInstance) => {
