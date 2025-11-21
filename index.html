@@ -116,7 +116,12 @@
     script.onload = () => {
       console.log("Habadabaduu");
 
-      getValueFromUrl("https://carl98k.github.io/WebGLTest/?token=1234567890qwerty");
+      //getValueFromUrl("https://carl98k.github.io/WebGLTest/?token=1234567890qwerty");
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const myVar = urlParams.get("token");
+      console.log(urlParams);
+      console.log(myVar);
 
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
@@ -132,11 +137,11 @@
 
     document.body.appendChild(script);
 
-    function getValueFromUrl(url) {
+    /*function getValueFromUrl(url) {
       const urlParams = new URLSearchParams(window.location.search);
       const myVar = urlParams.get("token");
       console.log(myVar);
-    }
+    }*/
 
   </script>
 </body>
