@@ -111,18 +111,15 @@
 
     loadingBar.style.display = "block";
 
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const myVar = urlParams.get("token");
+    console.log(myVar);
 
     var script = document.createElement("script");
     script.src = loaderUrl;
 
     var MyGameInstance = null;
     script.onload = () => {
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const myVar = urlParams.get("token");
-      console.log(myVar);
-
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
       }).then((unityInstance) => {
