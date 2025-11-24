@@ -116,7 +116,7 @@
     var script = document.createElement("script");
     script.src = loaderUrl;
 
-    let MyGameInstance = null;
+    var MyGameInstance = null;
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
