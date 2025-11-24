@@ -25,7 +25,6 @@
       <div id="unity-build-title">Unleash Play</div>
     </div>
   </div>
-  <script src="Build/Web GL Testing.loader.js"></script>
   <script>
 
     var container = document.querySelector("#unity-container");
@@ -112,24 +111,18 @@
 
     loadingBar.style.display = "block";
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const myVar = urlParams.get("token");
+    console.log(myVar);
+
     var script = document.createElement("script");
     script.src = loaderUrl;
     script.onload = () => {
-      console.log("Habadabaduu");
-
-      //getValueFromUrl("https://carl98k.github.io/WebGLTest/?token=1234567890qwerty");
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const myVar = urlParams.get("token");
-      console.log(myVar);
-      //unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
-
-
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
       }).then((unityInstance) => {
-        unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
         loadingBar.style.display = "none";
+        unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
         fullscreenButton.onclick = () => {
           unityInstance.SetFullscreen(1);
         };
@@ -139,12 +132,6 @@
     };
 
     document.body.appendChild(script);
-
-    /*function getValueFromUrl(url) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const myVar = urlParams.get("token");
-      console.log(myVar);
-    }*/
 
   </script>
 </body>
