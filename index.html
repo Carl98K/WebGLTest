@@ -112,7 +112,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const myVar = urlParams.get("token");
     console.log(myVar);
-    console.log("Yahooo");
 
     var script = document.createElement("script");
     script.src = loaderUrl;
@@ -126,7 +125,7 @@
 
         setTimeout(function () {
           MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-        }, 5000);
+        }, 300);
 
         loadingBar.style.display = "none";
         fullscreenButton.onclick = () => {
