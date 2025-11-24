@@ -119,19 +119,20 @@
     var MyGameInstance = null;
     script.onload = () => {
 
-      
+
       const urlParams = new URLSearchParams(window.location.search);
-      console.log("token location: ", window.location.search);
+      console.log("1!token location: ", window.location.search);
       const myVar = urlParams.get("token");
       console.log("token myVar: ", myVar);
 
       createUnityInstance(canvas, config, (progress) => {
+        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
         progressBarFull.style.width = 100 * progress + "%";
       }).then((unityInstance) => {
         MyGameInstance = unityInstance;
 
         //setTimeout(function () {
-        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
+
         //}, 300);
 
         loadingBar.style.display = "none";
