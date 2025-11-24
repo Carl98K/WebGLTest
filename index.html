@@ -122,7 +122,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const myVar = urlParams.get("token");
       console.log(myVar);
-      unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
+      //unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
 
 
       createUnityInstance(canvas, config, (progress) => {
