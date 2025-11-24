@@ -109,35 +109,22 @@
 
       loadingBar.style.display = "block";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const myVar = urlParams.get("token");
-    console.log(myVar);
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+              }).catch((message) => {
+                alert(message);
+              });
+            };
 
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-
-    var MyGameInstance = null;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstance) => {
-        MyGameInstance = unityInstance;
-
-        setTimeout(function () {
-          MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-        }, 5000);
-
-        loadingBar.style.display = "none";
-        fullscreenButton.onclick = () => {
-          unityInstance.SetFullscreen(1);
-        };
-      }).catch((message) => {
-        alert(message);
-      });
-    };
-
-    document.body.appendChild(script);
-
+      document.body.appendChild(script);
 
     </script>
   </body>
