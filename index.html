@@ -126,7 +126,7 @@
         MyGameInstance = unityInstance;
 
         setTimeout(function () {
-          MyGameInstance.SendMessage("TokenMan", "ReceiveToken", "Hello from index.html!");
+          MyGameInstance.SendMessage("TokenMan", "ReceiveToken", myVar);
         }, 5000);
 
         loadingBar.style.display = "none";
