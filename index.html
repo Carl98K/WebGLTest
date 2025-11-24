@@ -123,9 +123,9 @@
       }).then((unityInstance) => {
         MyGameInstance = unityInstance;
 
-        setTimeout(function () {
+        //setTimeout(function () {
           MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-        }, 300);
+        //}, 300);
 
         loadingBar.style.display = "none";
         fullscreenButton.onclick = () => {
