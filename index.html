@@ -25,6 +25,7 @@
       <div id="unity-build-title">Unleash Play</div>
     </div>
   </div>
+  <script src="Build/Web GL Testing.loader.js"></script>
   <script>
 
     var container = document.querySelector("#unity-container");
@@ -120,12 +121,14 @@
 
       const urlParams = new URLSearchParams(window.location.search);
       const myVar = urlParams.get("token");
-      console.log(urlParams);
       console.log(myVar);
+      unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
+
 
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
       }).then((unityInstance) => {
+        unityInstance.SendMessage('API Manager', 'ReceiveToken', 'Hello from javascript!');
         loadingBar.style.display = "none";
         fullscreenButton.onclick = () => {
           unityInstance.SetFullscreen(1);
