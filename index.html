@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Unleash Play</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -17,6 +17,11 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Unleash Play</div>
+      </div>
     </div>
     <script>
 
@@ -24,6 +29,7 @@
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
 
       // Shows a temporary message banner/ribbon for a few seconds, or
@@ -51,16 +57,16 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Web GL Build and Run.loader.js";
+      var loaderUrl = buildUrl + "/Web GL Testing.loader.js";
       var config = {
-        dataUrl: buildUrl + "/Web GL Build and Run.data.unityweb",
-        frameworkUrl: buildUrl + "/Web GL Build and Run.framework.js.unityweb",
-        codeUrl: buildUrl + "/Web GL Build and Run.wasm.unityweb",
-        symbolsUrl: buildUrl + "/Web GL Build and Run.symbols.json.unityweb",
+        dataUrl: buildUrl + "/Web GL Testing.data.unityweb",
+        frameworkUrl: buildUrl + "/Web GL Testing.framework.js.unityweb",
+        codeUrl: buildUrl + "/Web GL Testing.wasm.unityweb",
+        symbolsUrl: buildUrl + "/Web GL Testing.symbols.json.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HSI",
         productName: "Unleash Play",
-        productVersion: "1.2.0 (35)",
+        productVersion: "1.2.0 (36)",
         showBanner: unityShowBanner,
       };
 
@@ -102,8 +108,9 @@
         canvas.style.height = "960px";
       }
 
-     loadingBar.style.display = "block";
+      loadingBar.style.display = "block";
 
+      // add this
     const urlParams = new URLSearchParams(window.location.search);
     const myVar = urlParams.get("token");
     console.log(myVar);
@@ -123,6 +130,9 @@
         }, 4000);
 
         loadingBar.style.display = "none";
+        fullscreenButton.onclick = () => {
+          unityInstance.SetFullscreen(1);
+        };
       }).catch((message) => {
         alert(message);
       });
