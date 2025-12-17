@@ -18,20 +18,17 @@
       /* src: url('fonts/mycustomfont.woff') format('woff'); */
     }
 
-    body {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
-
     #loading-overlay {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       width: 540px;
       height: 930px;
       background-color: #F7E7CE;
       /* Dark background */
       color: white;
       z-index: 10;
-      border: 1px solid red;
       /* Ensures it's on top of the Unity canvas */
     }
 
@@ -50,7 +47,6 @@
       align-items: center;
       /* Center horizontally */
       animation: diagonal-scroll 5s linear infinite;
-      overflow: hidden;
     }
 
     @keyframes diagonal-scroll {
@@ -81,10 +77,10 @@
       color: black;
     }
 
-    /*#loading-text {
-      margin: 15px;
-      font-size: 50px;
-    }*/
+    #loading-text {
+      margin: 15px 0px 15px 0px;
+      font-size: 17px;
+    }
 
     #version-text {
       font-size: 12px;
@@ -123,7 +119,7 @@
       text-shadow: -1.5px 1.5px 2px rgba(0, 0, 0, 0.521);
     }
 
-    .wave-container span {
+    /*.wave-container span {
       margin: 15px 0px 15px 0px;
       white-space: nowrap;
       font-size: 17px;
@@ -132,26 +128,26 @@
       font-weight: bold;
       color: black;
       display: inline-block;
-      /* Allows vertical transformation */
+      /* Allows vertical transformation 
       animation: wave 1.5s ease-in-out infinite;
-      /* Apply the animation */
+      /* Apply the animation 
       animation-delay: calc(var(--i) * 0.1s);
-      /* Stagger the start time */
-    }
+      /* Stagger the start time 
+    }*/
 
-    @keyframes wave {
+    /*@keyframes wave {
 
       0%,
       100% {
         transform: translateY(0);
-        /* Start and end at original position */
+        /* Start and end at original position 
       }
 
       50% {
         transform: translateY(-20px);
-        /* Move up in the middle of the animation */
+        /* Move up in the middle of the animation 
       }
-    }
+    }*/
   </style>
 </head>
 
@@ -159,7 +155,7 @@
   <div id="loading-overlay">
     <div id="background-icons">
       <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
-      <div class="wave-container">
+      <!--<div class="wave-container">
         <span class="wave" style="--i: 1">L</span>
         <span class="wave" style="--i: 2">o</span>
         <span class="wave" style="--i: 3">a</span>
@@ -167,9 +163,9 @@
         <span class="wave" style="--i: 5">i</span>
         <span class="wave" style="--i: 5">n</span>
         <span class="wave" style="--i: 5">g</span>
-      </div>
-      <!--<p id="loading-text">Loading...</p>-->
-      <p id="version-text">v1.2.0 (49)</p>
+      </div>-->
+      <p id="loading-text">Loading...</p>
+      <p id="version-text">v1.2.0 (51)</p>
       <button id="start-button" style="display:none;">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -279,7 +275,32 @@
 
     var unityContainer = document.querySelector("#unity-container");
     var loadingOverlay = document.querySelector("#loading-overlay");
+    var loadingText = document.getElementById("loading-text");
+    var versionText = document.getElementById("version-text");
     var startButton = document.querySelector("#start-button");
+
+    function UnityProgress(progress) {
+      if (progress === 1) {
+        // --- LOADING COMPLETE ---
+
+        // 1. Update the status text
+        //loadingText.innerHTML = "Loading Complete! Press Start to Play.";
+
+        // 2. Show the Start button
+        startButton.style.display = 'block';
+        loadingText.textContent = "";
+        versionText.textContent = "";
+
+        // NOTE: The loadingBox remains visible, covering the canvas, until the button is pressed.
+
+      } else {
+        // --- WHILE LOADING ---
+
+        // Update the percentage
+        var percent = Math.round(progress * 100);
+        loadingText.innerHTML = "Preparing pets " + percent + "%";
+      }
+    }
 
     loadingBar.style.display = "block";
 
@@ -294,16 +315,14 @@
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
         progressBarFull.style.width = 100 * progress + "%";
+
+        UnityProgress(progress);
       }).then((unityInstance) => {
         console.log("Unity game loaded. Showing start button.");
-        const elements = document.querySelectorAll(".wave");
+        //loadingText.textContent = "";
 
-        elements.forEach(element => {
-          element.textContent = "";
-        });
-
-        document.getElementById("version-text").textContent = "";
-        startButton.style.display = "block";
+        //document.getElementById("version-text").textContent = "";
+        //startButton.style.display = "block";
 
         startButton.onclick = () => {
           // Hide the overlay and allow interaction
