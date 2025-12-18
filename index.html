@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unleash Play</title>
+  <title>Unity WebGL Player | Unleash Play</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
   <style>
@@ -165,7 +165,7 @@
         <span class="wave" style="--i: 5">g</span>
       </div>-->
       <p id="loading-text">Loading...</p>
-      <p id="version-text">v1.2.0 (59)</p>
+      <p id="version-text">v1.2.0 (60)</p>
       <button id="start-button" style="display:none;">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -222,16 +222,16 @@
     }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/Web GL for QA.loader.js";
+    var loaderUrl = buildUrl + "/Web GL Testing.loader.js";
     var config = {
-      dataUrl: buildUrl + "/Web GL for QA.data",
-      frameworkUrl: buildUrl + "/Web GL for QA.framework.js",
-      codeUrl: buildUrl + "/Web GL for QA.wasm",
-      symbolsUrl: buildUrl + "/Web GL for QA.symbols.json",
+      dataUrl: buildUrl + "/Web GL Testing.data",
+      frameworkUrl: buildUrl + "/Web GL Testing.framework.js",
+      codeUrl: buildUrl + "/Web GL Testing.wasm",
+      symbolsUrl: buildUrl + "/Web GL Testing.symbols.json",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.0 (49)",
+      productVersion: "1.2.0 (60)",
       showBanner: unityShowBanner,
     };
 
