@@ -10,12 +10,7 @@
   <style>
     @font-face {
       font-family: 'Pixeloid-Sans Bold';
-      /* Choose a name for your font */
       src: url(TemplateData/Font/PixeloidSans-Bold.ttf) format('truetype');
-      /* Specify the path and format */
-      /* You can add multiple src lines for different formats for broader browser support */
-      /* src: url('fonts/mycustomfont.woff2') format('woff2'), */
-      /* src: url('fonts/mycustomfont.woff') format('woff'); */
     }
 
     #loading-overlay {
@@ -26,10 +21,8 @@
       width: 370px;
       height: 720px;
       background-color: #F7E7CE;
-      /* Dark background */
       color: white;
       z-index: 10;
-      /* Ensures it's on top of the Unity canvas */
     }
 
     #background-icons {
@@ -43,22 +36,16 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      /* Center vertically */
       align-items: center;
-      /* Center horizontally */
       animation: diagonal-scroll 5s linear infinite;
     }
 
     @keyframes diagonal-scroll {
       from {
         background-position: 0 0;
-        /* Start at top-left */
       }
 
       to {
-        /* Move left by a certain amount (e.g., image width) and down by a certain amount */
-        /* Use negative X value to move left, positive Y value to move down */
-        /* The distance needs to be an exact multiple of the image's dimensions for a seamless loop */
         background-position: -200px 200px;
       }
     }
@@ -165,7 +152,7 @@
         <span class="wave" style="--i: 5">g</span>
       </div>-->
       <p id="loading-text">Loading</p>
-      <p id="version-text">v1.2.0 (65)</p>
+      <p id="version-text">v1.2.0 (66)</p>
       <button id="start-button" style="display:none;">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -348,6 +335,15 @@
     };
 
     document.body.appendChild(script);
+
+    window.onFlutterMessage = function (msg) {
+      console.log('Received message from Flutter:', msg);
+
+      if (msg.action === 'pause') {
+        // Pause game/audio
+        console.log('Pausing due to', msg.reason);
+      }
+    };
 
   </script>
 </body>
