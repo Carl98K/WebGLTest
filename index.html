@@ -23,8 +23,8 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 500px;
-      height: 800px;
+      width: 370px;
+      height: 720px;
       background-color: #F7E7CE;
       color: white;
       z-index: 10;
@@ -148,7 +148,7 @@
     <div id="background-icons">
       <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
       <p id="loading-text">Loading</p>
-      <p id="version-text">v1.2.0 (71)</p>
+      <p id="version-text">v1.2.0 (72)</p>
       <button id="start-button" style="display:none;">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -214,7 +214,7 @@
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.0 (71)",
+      productVersion: "1.2.0 (72)",
       showBanner: unityShowBanner,
     };
 
@@ -256,7 +256,7 @@
       canvas.style.height = "960px";
     }
 
-     var unityContainer = document.querySelector("#unity-container");
+    var unityContainer = document.querySelector("#unity-container");
     var loadingOverlay = document.querySelector("#loading-overlay");
     var loadingText = document.getElementById("loading-text");
     var versionText = document.getElementById("version-text");
@@ -337,7 +337,9 @@
 
       state = JSON.stringify(msg);
 
+      //setTimeout(function () {
       MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
+      //}, 5000);
 
       if (msg.action === 'pause') {
         // Pause game/audio
