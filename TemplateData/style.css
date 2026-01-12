@@ -1,135 +1,219 @@
-body { padding: 0; margin: 0;
-     height: 100%;
-    overflow: hidden; }
-#unity-container { position: absolute }
-#unity-container.unity-desktop { left: 50%; top: 50%; transform: translate(-50%, -50%) }
-#unity-container.unity-mobile { position: fixed; width: 100%; height: 100% }
-#unity-canvas { background: #231F20 }
-.unity-mobile #unity-canvas { width: 100%; height: 100% }
-#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
-#unity-logo { width: 154px; height: 130px; background: url('unity-logo-dark.png') no-repeat center }
-#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('progress-bar-empty-dark.png') no-repeat center }
-#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-dark.png') no-repeat center }
-#unity-footer { position: relative }
-.unity-mobile #unity-footer { display: none }
-#unity-webgl-logo { float:left; width: 204px; height: 38px; background: url('webgl-logo.png') no-repeat center }
-#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
-#unity-fullscreen-button { cursor:pointer; float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
-#unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
-   
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#unity-container {
+  position: absolute
+}
+
+#unity-container.unity-desktop {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%)
+}
+
+#unity-container.unity-mobile {
+  position: fixed;
+  width: 100%;
+  height: 100%
+}
+
+#unity-canvas {
+  background: #231F20
+}
+
+.unity-mobile #unity-canvas {
+  width: 100%;
+  height: 100%
+}
+
+#unity-loading-bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: none
+}
+
+#unity-logo {
+  width: 154px;
+  height: 130px;
+  background: url('unity-logo-dark.png') no-repeat center
+}
+
+#unity-progress-bar-empty {
+  width: 141px;
+  height: 18px;
+  margin-top: 10px;
+  margin-left: 6.5px;
+  background: url('progress-bar-empty-dark.png') no-repeat center
+}
+
+#unity-progress-bar-full {
+  width: 0%;
+  height: 18px;
+  margin-top: 10px;
+  background: url('progress-bar-full-dark.png') no-repeat center
+}
+
+#unity-footer {
+  position: relative
+}
+
+.unity-mobile #unity-footer {
+  display: none
+}
+
+#unity-webgl-logo {
+  float: left;
+  width: 204px;
+  height: 38px;
+  background: url('webgl-logo.png') no-repeat center
+}
+
+#unity-build-title {
+  float: right;
+  margin-right: 10px;
+  line-height: 38px;
+  font-family: arial;
+  font-size: 18px
+}
+
+#unity-fullscreen-button {
+  cursor: pointer;
+  float: right;
+  width: 38px;
+  height: 38px;
+  background: url('fullscreen-button.png') no-repeat center
+}
+
+#unity-warning {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%);
+  background: white;
+  padding: 10px;
+  display: none
+}
+
 @font-face {
-      font-family: 'Pixeloid-Sans Bold';
-      src: url(TemplateData/Font/PixeloidSans-Bold.ttf) format('truetype');
-    }
+  font-family: 'Pixeloid-Sans Bold';
+  src: url(TemplateData/Font/PixeloidSans-Bold.ttf) format('truetype');
+}
 
-    #loading-overlay {
-      position: fixed;
-      left: 50%;
-      top: 50%; 
-      max-width: 540px;      /* same as game size */
-      max-height: 1080px;
-      transform: translate(-50%, -50%);
-      width: 100vw;
-      height: 100vh;
-      background-color: #F7E7CE;
-      color: white;
-      z-index: 10;
-    }
+#loading-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: 540px;
+  /* same as game size */
+  max-height: 1080px;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background-color: #F7E7CE;
+  color: white;
+  z-index: 10;
+}
 
-    #loading-overlay::-webkit-scrollbar{
-      display: none;
-    }
+#loading-overlay::-webkit-scrollbar {
+  display: none;
+}
 
-    #background-icons {
-      width: 100%;
-      height: 100%;
-      background-image: url(icons.png);
-      background-repeat: repeat;
-      background-position: 0 0px;
-      background-size: cover;
+#background-icons {
+  width: 100%;
+  height: 100%;
+  background-image: url(icons.png);
+  background-repeat: repeat;
+  background-position: 0 0px;
+  background-size: cover;
 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      animation: diagonal-scroll 5s linear infinite;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: diagonal-scroll 5s linear infinite;
+}
 
-    @keyframes diagonal-scroll {
-      from {
-        background-position: 0 0;
-      }
+@keyframes diagonal-scroll {
+  from {
+    background-position: 0 0;
+  }
 
-      to {
-        background-position: -200px 200px;
-      }
-    }
+  to {
+    background-position: -200px 200px;
+  }
+}
 
-    #dog-icon {
-      width: 75px;
-      height: 60px;
-    }
+#dog-icon {
+  width: 75px;
+  height: 60px;
+}
 
-    p {
-      margin: 0px;
-      padding: 0px;
-      text-align: center;
-      font-family: 'Pixeloid-Sans Bold';
-      font-weight: bold;
-      color: black;
-    }
+p {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  font-family: 'Pixeloid-Sans Bold';
+  font-weight: bold;
+  color: black;
+}
 
-    #loading-text {
-      margin: 15px 0px 15px 0px;
-      /* Adjust the text font size by 3 px from 17px to 20px */
-      font-size: 20px; 
-    }
+#loading-text {
+  margin: 15px 0px 15px 0px;
+  /* Adjust the text font size by 3 px from 17px to 20px */
+  font-size: 20px;
+}
 
-    #version-text {
-      font-size: 12px;
-    }
+#version-text {
+  font-size: 12px;
+}
 
-    #start-button {
-      position: relative;
-      cursor: pointer;
-      color: white;
-      border: none;
-      background: transparent;
-      padding: 0;
-      margin: 0;
-    }
+#start-button {
+  position: relative;
+  cursor: pointer;
+  color: white;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
 
-    #button-img {
-      display: block;
-      width: 110px;
-      height: 65px;
-      padding: 0;
-      margin: 0;
-    }
+#button-img {
+  display: block;
+  width: 110px;
+  height: 65px;
+  padding: 0;
+  margin: 0;
+}
 
-    /* added a hover effect on button through #start-button:hover #button-img and #start-button:active #button-img */
+/* added a hover effect on button through #start-button:hover #button-img and #start-button:active #button-img */
 
-    #start-button:hover #button-img {
-      transform: translateY(-1px) scale(1.03);
-      filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.55));
-    }
+#start-button:hover #button-img {
+  transform: translateY(-1px) scale(1.03);
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.55));
+}
 
-    #start-button:active #button-img {
-      transform: translateY(1px) scale(0.98);
-      filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
-    }
+#start-button:active #button-img {
+  transform: translateY(1px) scale(0.98);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
+}
 
-    #button-text {
-      position: absolute;
-      top: 42%;
-      left: 52%;
-      transform: translate(-50%, -50%);
-      padding: 0;
-      margin: 0;
+#button-text {
+  position: absolute;
+  top: 42%;
+  left: 52%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  margin: 0;
 
-      letter-spacing: 1px;
-      font-family: 'Pixeloid-Sans Bold';
-      font-size: 20.5px;
-      color: white;
-      text-shadow: -1.5px 1.5px 2px rgba(0, 0, 0, 0.521);
-    }
+  letter-spacing: 1px;
+  font-family: 'Pixeloid-Sans Bold';
+  font-size: 20.5px;
+  color: white;
+  text-shadow: -1.5px 1.5px 2px rgba(0, 0, 0, 0.521);
+}
