@@ -19,7 +19,7 @@ body { padding: 0; margin: 0;
    
 @font-face {
       font-family: 'Pixeloid-Sans Bold';
-      src: url(TemplateData/Font/PixeloidSans-Bold.ttf) format('truetype');
+      src: url(Font/PixeloidSans-Bold.ttf) format('truetype');
     }
 
     #loading-overlay {
