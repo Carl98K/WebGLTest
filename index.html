@@ -5,210 +5,136 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | Unleash Play</title>
-  <link rel="shortcut icon" href="TemplateData/favicon.ico">
-  <link rel="stylesheet" href="TemplateData/style.css">
-</head>
 
-<body>
-  <div id="loading-overlay">
-    <div id="background-icons">
-      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
-      <p id="loading-text">Loading</p>
-      <p id="version-text">v1.2.1 (82)</p>
-      <button id="start-button" style="display:none;">
-        <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
-        <p id="button-text">PLAY</p>
-      </button>
-    </div>
-  </div>
-  <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas" width=540 height=960 tabindex="-1"></canvas>
-    <div id="unity-loading-bar">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full"></div>
-      </div>
-    </div>
-    <div id="unity-warning"> </div>
-    <div id="unity-footer">
-      <div id="unity-webgl-logo"></div>
-      <div id="unity-fullscreen-button"></div>
-      <div id="unity-build-title">Unleash Play</div>
-    </div>
-  </div>
-  <script>
-
-    var container = document.querySelector("#unity-container");
-    var canvas = document.querySelector("#unity-canvas");
-    var loadingBar = document.querySelector("#unity-loading-bar");
-    var progressBarFull = document.querySelector("#unity-progress-bar-full");
-    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-    var warningBanner = document.querySelector("#unity-warning");
-
-    // Shows a temporary message banner/ribbon for a few seconds, or
-    // a permanent error message on top of the canvas if type=='error'.
-    // If type=='warning', a yellow highlight color is used.
-    // Modify or remove this function to customize the visually presented
-    // way that non-critical warnings and error messages are presented to the
-    // user.
-    function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      var div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type == 'error') div.style = 'background: red; padding: 10px;';
-      else {
-        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-        setTimeout(function () {
-          warningBanner.removeChild(div);
-          updateBannerVisibility();
-        }, 5000);
-      }
-      updateBannerVisibility();
+  <style>
+    html,
+    body {
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
     }
 
-    var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/Web GL Testing.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/Web GL Testing.data",
-      frameworkUrl: buildUrl + "/Web GL Testing.framework.js",
-      codeUrl: buildUrl + "/Web GL Testing.wasm",
-      symbolsUrl: buildUrl + "/Web GL Testing.symbols.json",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "HSI",
-      productName: "Unleash Play",
-      productVersion: "1.2.0 (82)",
-      showBanner: unityShowBanner,
-    };
+    #start-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 540px;
+      height: 960px;
+      background-color: #081c8d;
+      color: white;
+    }
+  </style>
+</head>
 
-    // By default, Unity keeps WebGL canvas render target size matched with
-    // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-    // Set this to false if you want to decouple this synchronization from
-    // happening inside the engine, and you would instead like to size up
-    // the canvas DOM size and WebGL render target sizes yourself.
-    // config.matchWebGLToCanvasSize = false;
+<body style="text-align: center; padding: 0; border: 0; margin: 0;">
+  <div id="start-screen">
+    <h1>Unleash Game</h1>
+    <button id="start-button">PLAY GAME</button>
+  </div>
 
-    // If you would like all file writes inside Unity Application.persistentDataPath
-    // directory to automatically persist so that the contents are remembered when
-    // the user revisits the site the next time, uncomment the following line:
-    // config.autoSyncPersistentDataPath = true;
-    // This autosyncing is currently not the default behavior to avoid regressing
-    // existing user projects that might rely on the earlier manual
-    // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-    // expected to change.
+  <div id="unity-container" style="display: none;">
+    <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+      style="width: 540px; height: 960px; background: #231F20"></canvas>
+  </div>
 
+  <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    style="width: 540px; height: 960px; background: #231F20"></canvas>-->
+  <script src="Build/Web GL Build and Run.loader.js"></script>
+  <script>
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       // Mobile device style: fill the whole browser client area with the game canvas:
-
       var meta = document.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
       document.getElementsByTagName('head')[0].appendChild(meta);
-      container.className = "unity-mobile";
-      canvas.className = "unity-mobile";
 
-      // To lower canvas resolution on mobile devices to gain some
-      // performance, uncomment the following line:
-      // config.devicePixelRatio = 1;
+      var canvas = document.querySelector("#unity-canvas");
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.position = "fixed";
 
-
-    } else {
-      // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-
-      canvas.style.width = "540px";
-      canvas.style.height = "960px";
+      document.body.style.textAlign = "left";
     }
 
-    var unityContainer = document.querySelector("#unity-container");
-    var loadingOverlay = document.querySelector("#loading-overlay");
-    var loadingText = document.getElementById("loading-text");
-    var versionText = document.getElementById("version-text");
-    var startButton = document.querySelector("#start-button");
+    const startScreen = document.querySelector("#start-screen");
+    const startButton = document.querySelector("#start-button");
+    const unityContainer = document.querySelector("#unity-container");
 
-    function UnityProgress(progress) {
-      if (progress === 1) {
-        // --- LOADING COMPLETE ---
+    let MyGameInstance = "";
 
-        // 1. Update the status text
-        //loadingText.innerHTML = "Loading Complete! Press Start to Play.";
+    startButton.onclick = () => {
+  // Hide the button so it can't be clicked twice
+  startScreen.style.display = "none";
+  unityContainer.style.display = "block";
 
-        // 2. Show the Start button
-        startButton.style.display = 'block';
-        loadingText.textContent = "";
-        versionText.textContent = "";
+  createUnityInstance(document.querySelector("#unity-canvas"), {
+    dataUrl: "Build/Web GL Build and Run.data",
+    frameworkUrl: "Build/Web GL Build and Run.framework.js",
+    codeUrl: "Build/Web GL Build and Run.wasm",
+    symbolsUrl: "Build/Web GL Build and Run.symbols.json",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "HSI",
+    productName: "Unleash Play",
+    productVersion: "1.2.1 (83)",
+    // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+  }).then((unityInstance) => {
+    // Store the instance globally so you can call unityInstance.SendMessage() from JS
+      MyGameInstance = unityInstance;
 
-        // NOTE: The loadingBox remains visible, covering the canvas, until the button is pressed.
+      console.log("Hello Instance !");
+  }).catch((message) => {
+    alert(message);
+  });
 
-      } else {
-        // --- WHILE LOADING ---
+  if (MyGameInstance != null) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const myVar = urlParams.get("token");
+      console.log(myVar);
 
-        // Update the percentage
-        var percent = Math.round(progress * 100);
-        loadingText.innerHTML = "Preparing pets " + percent + "%";
-      }
+      setTimeout(function () {
+        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
+      }, 5000);
     }
+    else {
+      console.log("MyGameInstance is null!");
+    };
+};
 
-    loadingBar.style.display = "block";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const myVar = urlParams.get("token");
-    console.log(myVar);
 
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-
-    var MyGameInstance = null;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-
-        UnityProgress(progress);
+    /*createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/Web GL Build and Run.data",
+      frameworkUrl: "Build/Web GL Build and Run.framework.js",
+        codeUrl: "Build/Web GL Build and Run.wasm",
+        symbolsUrl: "Build/Web GL Build and Run.symbols.json",
+        streamingAssetsUrl: "StreamingAssets",
+      companyName: "HSI",
+      productName: "Unleash Play",
+      productVersion: "1.2.1 (83)",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
-        console.log("Unity game loaded. Showing start button.");
-
-        startButton.onclick = () => {
-          // Hide the overlay and allow interaction
-          loadingOverlay.style.display = "none";
-          // In some cases (like mobile audio), you might need to trigger
-          // a specific Unity function here to manually start the audio system
-          // unityInstance.SendMessage('YourGameObjectName', 'StartAudio');
-        };
-
+        // 2. Assign the internal instance to your global variable
         MyGameInstance = unityInstance;
 
-        setTimeout(function () {
-          MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-        }, 5000);
-
-        loadingBar.style.display = "none";
-        fullscreenButton.onclick = () => {
-          unityInstance.SetFullscreen(1);
-        };
-      }).catch((message) => {
-        alert(message);
+        console.log("Hello Instance !");
       });
-    };
 
-    let state;
+    if (MyGameInstance != null) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const myVar = urlParams.get("token");
+      console.log(myVar);
 
-    window.onFlutterMessage = function (msg) {
-      console.log('Received message from Flutter:', msg);
-
-      state = JSON.stringify(msg);
-
-      //setTimeout(function () {
-      MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
-      //}, 5000);
-
-      if (msg.action === 'pause') {
-        // Pause game/audio
-        console.log('Pausing due to', msg.reason);
-      }
-    };
-
-    document.body.appendChild(script);
+      setTimeout(function () {
+        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
+      }, 5000);
+    }
+    else {
+      console.log("MyGameInstance is null!");
+    };*/
 
   </script>
 </body>
