@@ -7,13 +7,8 @@
   <title>Unity WebGL Player | Unleash Play</title>
 
   <style>
-    html,
     body {
       overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
     }
 
     #start-screen {
@@ -30,19 +25,19 @@
 </head>
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-  <div id="start-screen">
+  <!--<div id="start-screen">
     <h1>Unleash Game</h1>
     <button id="start-button">PLAY GAME</button>
-  </div>
+  </div>-->
 
-  <div id="unity-container" style="display: none;">
+  <!--<div id="unity-container" style="display: none;">
     <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
       style="width: 540px; height: 960px; background: #231F20"></canvas>
-  </div>
+  </div>-->
 
-  <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
-    style="width: 540px; height: 960px; background: #231F20"></canvas>-->
-  <script src="Build/Web GL Build and Run.loader.js"></script>
+  <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    style="width: 540px; height: 960px; background: #231F20"></canvas>
+  <script src="Build/Web GL Testing.loader.js"></script>
   <script>
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       // Mobile device style: fill the whole browser client area with the game canvas:
@@ -59,7 +54,7 @@
       document.body.style.textAlign = "left";
     }
 
-    const startScreen = document.querySelector("#start-screen");
+    /*const startScreen = document.querySelector("#start-screen");
     const startButton = document.querySelector("#start-button");
     const unityContainer = document.querySelector("#unity-container");
 
@@ -71,14 +66,14 @@
   unityContainer.style.display = "block";
 
   createUnityInstance(document.querySelector("#unity-canvas"), {
-    dataUrl: "Build/Web GL Build and Run.data",
-    frameworkUrl: "Build/Web GL Build and Run.framework.js",
-    codeUrl: "Build/Web GL Build and Run.wasm",
-    symbolsUrl: "Build/Web GL Build and Run.symbols.json",
+    dataUrl: "Build/Web GL Testing.data",
+    frameworkUrl: "Build/Web GL Testing.framework.js",
+    codeUrl: "Build/Web GL Testing.wasm",
+    symbolsUrl: "Build/Web GL Testing.symbols.json",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (83)",
+    productVersion: "1.2.1 (84)",
     // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
   }).then((unityInstance) => {
     // Store the instance globally so you can call unityInstance.SendMessage() from JS
@@ -101,19 +96,20 @@
     else {
       console.log("MyGameInstance is null!");
     };
-};
+};*/
+
+    let MyGameInstance = "";
 
 
-
-    /*createUnityInstance(document.querySelector("#unity-canvas"), {
-      dataUrl: "Build/Web GL Build and Run.data",
-      frameworkUrl: "Build/Web GL Build and Run.framework.js",
-        codeUrl: "Build/Web GL Build and Run.wasm",
-        symbolsUrl: "Build/Web GL Build and Run.symbols.json",
-        streamingAssetsUrl: "StreamingAssets",
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/Web GL Testing.data",
+      frameworkUrl: "Build/Web GL Testing.framework.js",
+      codeUrl: "Build/Web GL Testing.wasm",
+      symbolsUrl: "Build/Web GL Testing.symbols.json",
+      streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.1 (83)",
+      productVersion: "1.2.1 (84)",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
@@ -134,7 +130,7 @@
     }
     else {
       console.log("MyGameInstance is null!");
-    };*/
+    };
 
   </script>
 </body>
