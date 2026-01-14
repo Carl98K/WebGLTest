@@ -5,38 +5,39 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | Unleash Play</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
 
-  <style>
-    body {
-      overflow: hidden;
-    }
-
-    #start-screen {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 540px;
-      height: 960px;
-      background-color: #081c8d;
-      color: white;
-    }
-  </style>
 </head>
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-  <!--<div id="start-screen">
-    <h1>Unleash Game</h1>
-    <button id="start-button">PLAY GAME</button>
-  </div>-->
 
-  <!--<div id="unity-container" style="display: none;">
+  <div id="start-screen">
+    <div id="background-icons">
+      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon"><br>
+
+      <p id="loading-text">Preparin pets...</p>
+      <!-- loading bar shown first -->
+      <div id="loading-bar-container">
+        <div id="loading-bar-fill"></div>
+      </div>
+      <p id="version-text">v1.2.1 (85)</p>
+      <button id="start-button">
+        <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
+        <p id="button-text">PLAY</p>
+      </button>
+    </div>
+  </div>
+
+  <div id="unity-container" style="display: none;">
     <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
       style="width: 540px; height: 960px; background: #231F20"></canvas>
-  </div>-->
+  </div>
 
-  <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
-    style="width: 540px; height: 960px; background: #231F20"></canvas>
+  <!-- Vanilla code for unity canvas game -->
+  <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    style="width: 540px; height: 960px; background: #231F20"></canvas>-->
+
   <script src="Build/Web GL Testing.loader.js"></script>
   <script>
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -54,9 +55,12 @@
       document.body.style.textAlign = "left";
     }
 
-    /*const startScreen = document.querySelector("#start-screen");
+    // Customized Js Code for initializing with loading design
+
+    const startScreen = document.querySelector("#start-screen");
     const startButton = document.querySelector("#start-button");
     const unityContainer = document.querySelector("#unity-container");
+    const loadingBarContainer = document.querySelector("#loading-bar-container");    
 
     let MyGameInstance = "";
 
@@ -73,7 +77,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (84)",
+    productVersion: "1.2.1 (85)",
     // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
   }).then((unityInstance) => {
     // Store the instance globally so you can call unityInstance.SendMessage() from JS
@@ -96,10 +100,11 @@
     else {
       console.log("MyGameInstance is null!");
     };
-};*/
+};
 
-    let MyGameInstance = "";
 
+    // Vanilla Code js for intializing
+    /*let MyGameInstance = "";
 
     createUnityInstance(document.querySelector("#unity-canvas"), {
       dataUrl: "Build/Web GL Testing.data",
@@ -109,7 +114,7 @@
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.1 (84)",
+      productVersion: "1.2.1 (85)",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
@@ -130,8 +135,28 @@
     }
     else {
       console.log("MyGameInstance is null!");
-    };
+    };*/
 
+  </script>
+  <!--Script for the loading bar-->
+  <script>
+    window.addEventListener('load', function () {
+      const startButton = document.getElementById('start-button');
+      const loadingBarFill = document.getElementById('loading-bar-fill');
+      const loadingBarContainer = document.getElementById('loading-bar-container');
+      const loadingText = document.getElementById('loading-text');
+      const versionText = document.getElementById('version-text');
+
+      if (!startButton || !loadingBarFill || !loadingBarContainer) return;
+
+      //5s loading-bar then button show
+      loadingBarFill.addEventListener('animationend', function () {
+        loadingBarContainer.style.display = 'none';
+        startButton.style.display = 'inline-block';
+        loadingText.textContent = "";
+        versionText.textContent = "";
+      });
+    });
   </script>
 </body>
 
