@@ -21,7 +21,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (87)</p>
+      <p id="version-text">v1.2.1 (90)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -55,7 +55,7 @@
       document.body.style.textAlign = "left";
     }
 
-    // Customized Js Code for initializing with loading design
+    // Customized Js Code for initializing game with loading design
 
     const startScreen = document.querySelector("#start-screen");
     const startButton = document.querySelector("#start-button");
@@ -78,7 +78,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (87)",
+    productVersion: "1.2.1 (90)",
   };
 
   try {
@@ -110,6 +110,31 @@ function sendTokenToUnity() {
   }
 }
 
+    let state;
+
+    function sendAppStateToUnity() {
+      window.onFlutterMessage = function (msg) {
+        console.log('Received message from Flutter:', msg);
+
+        state = JSON.stringify(msg);
+
+        //setTimeout(function () {
+        //MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
+        //}, 5000);
+
+        if (MyGameInstance) {
+          MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
+        }
+
+        if (msg.action === 'pause') {
+          // Pause game/audio
+          console.log('Pausing due to', msg.reason);
+        }
+      };
+    }
+
+    sendAppStateToUnity();
+
     /*startButton.onclick = () => {
   // Hide the button so it can't be clicked twice
   startScreen.style.display = "none";
@@ -123,7 +148,7 @@ function sendTokenToUnity() {
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (87)",
+    productVersion: "1.2.1 (90)",
     // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
   }).then((unityInstance) => {
     // Store the instance globally so you can call unityInstance.SendMessage() from JS
@@ -160,7 +185,7 @@ function sendTokenToUnity() {
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.1 (87)",
+      productVersion: "1.2.1 (90)",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
