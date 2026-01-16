@@ -21,7 +21,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (92)</p>
+      <p id="version-text">v1.2.1 (93)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -78,7 +78,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (92)",
+    productVersion: "1.2.1 (93)",
   };
 
   try {
@@ -110,7 +110,7 @@ function sendTokenToUnity() {
   }
 }*/
 
-const canvas = document.querySelector("#unity-canvas");
+const unityCanvas = document.querySelector("#unity-canvas");
 const config = {
   dataUrl: "Build/Web GL Testing.data",
   frameworkUrl: "Build/Web GL Testing.framework.js",
@@ -118,11 +118,11 @@ const config = {
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (92)",
+  productVersion: "1.2.1 (93)",
 };
 
 // Start the loading process and store the promise
-const unityInstancePromise = createUnityInstance(canvas, config, (progress) => {
+const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
   // Optional: Update a hidden loading bar here
   console.log(`Loading: ${Math.round(100 * progress)}%`);
 });
@@ -161,6 +161,7 @@ function sendTokenToUnity() {
     // Removed the 5s timeout; usually better to send once 'await' finishes
     MyGameInstance.SendMessage("API Manager", "ReceiveToken", token);
   }
+}
 
     let state;
 
@@ -200,7 +201,7 @@ function sendTokenToUnity() {
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (92)",
+    productVersion: "1.2.1 (93)",
     // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
   }).then((unityInstance) => {
     // Store the instance globally so you can call unityInstance.SendMessage() from JS
@@ -237,7 +238,7 @@ function sendTokenToUnity() {
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.1 (92)",
+      productVersion: "1.2.1 (93)",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
