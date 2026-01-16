@@ -20,7 +20,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (94)</p>
+      <p id="version-text">v1.2.1 (95)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -73,14 +73,11 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (94)",
+  productVersion: "1.2.1 (95)",
 };
 
-// Start the loading process and store the promise
-/*const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
-  // Optional: Update a hidden loading bar here
-  console.log(`Loading: ${Math.round(100 * progress)}%`);
-});*/
+/*Create unity instance and load the config of the game.
+  The promise result is stored on the variable. */
 const unityInstancePromise = createUnityInstance(unityCanvas, config);
 
 startButton.onclick = async () => {
@@ -128,10 +125,6 @@ function sendTokenToUnity() {
         console.log('Received message from Flutter:', msg);
 
         state = JSON.stringify(msg);
-
-        //setTimeout(function () {
-        //MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
-        //}, 5000);
 
         if (MyGameInstance) {
           MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
