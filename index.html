@@ -20,7 +20,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (95)</p>
+      <p id="version-text">v1.2.1 (96)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -73,16 +73,18 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (95)",
+  productVersion: "1.2.1 (96)",
 };
 
 /*Create unity instance and load the config of the game.
   The promise result is stored on the variable. */
-const unityInstancePromise = createUnityInstance(unityCanvas, config);
+//const unityInstancePromise = createUnityInstance(unityCanvas, config);
 
 startButton.onclick = async () => {
   // Disable the start button once clicked
   startButton.disabled = true;
+
+  const unityInstancePromise = createUnityInstance(unityCanvas, config);
 
   try {
     // Await if unityinstance promise result is completed
