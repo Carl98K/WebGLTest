@@ -21,7 +21,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (90)</p>
+      <p id="version-text">v1.2.1 (91)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -64,7 +64,7 @@
 
     let MyGameInstance = "";
 
-    startButton.onclick = async () => {
+    /*startButton.onclick = async () => {
   // 1. UI Transition
   startScreen.style.display = "none";
   unityContainer.style.display = "block";
@@ -78,7 +78,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (90)",
+    productVersion: "1.2.1 (91)",
   };
 
   try {
@@ -108,7 +108,49 @@ function sendTokenToUnity() {
     // Removed the 5s timeout; usually better to send once 'await' finishes
     MyGameInstance.SendMessage("API Manager", "ReceiveToken", token);
   }
-}
+}*/
+
+const canvas = document.querySelector("#unity-canvas");
+const config = {
+  dataUrl: "Build/Web GL Testing.data",
+  frameworkUrl: "Build/Web GL Testing.framework.js",
+  codeUrl: "Build/Web GL Testing.wasm",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "HSI",
+  productName: "Unleash Play",
+  productVersion: "1.2.1 (91)",
+};
+
+// Start the loading process and store the promise
+const unityInstancePromise = createUnityInstance(canvas, config, (progress) => {
+  // Optional: Update a hidden loading bar here
+  console.log(`Loading: ${Math.round(100 * progress)}%`);
+});
+
+startButton.onclick = async () => {
+  // 2. UI Transition (Immediate feedback)
+  startButton.textContent = "Loading Game...";
+  startButton.disabled = true;
+
+  try {
+    // 3. Await the pre-existing promise
+    const unityInstance = await unityInstancePromise;
+
+    // 4. Reveal Unity
+    startScreen.style.display = "none";
+    unityContainer.style.display = "block";
+
+    // 5. Handle Success
+    MyGameInstance = unityInstance;
+    console.log("Unity Ready!");
+    sendTokenToUnity();
+
+  } catch (error) {
+    alert("Unity Loading Failed: " + error);
+    startButton.disabled = false;
+    startButton.textContent = "Start Game";
+  }
+};
 
     let state;
 
@@ -148,7 +190,7 @@ function sendTokenToUnity() {
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.1 (90)",
+    productVersion: "1.2.1 (91)",
     // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
   }).then((unityInstance) => {
     // Store the instance globally so you can call unityInstance.SendMessage() from JS
@@ -185,7 +227,7 @@ function sendTokenToUnity() {
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.2.1 (90)",
+      productVersion: "1.2.1 (91)",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {

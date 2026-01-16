@@ -126,7 +126,7 @@
       height: 100%;
       width: 0%;
       background-color: #E4CBA5;
-      animation: loading-fill 1.5s linear forwards;
+      animation: loading-fill 1s linear forwards;
     }
 
     @keyframes loading-fill {
