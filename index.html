@@ -5,9 +5,8 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | Unleash Play</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
-
 </head>
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
@@ -21,7 +20,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (93)</p>
+      <p id="version-text">v1.2.1 (94)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -39,7 +38,9 @@
     style="width: 540px; height: 960px; background: #231F20"></canvas>-->
 
   <script src="Build/Web GL Testing.loader.js"></script>
+
   <script>
+
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       // Mobile device style: fill the whole browser client area with the game canvas:
       var meta = document.createElement('meta');
@@ -55,103 +56,59 @@
       document.body.style.textAlign = "left";
     }
 
-    // Customized Js Code for initializing game with loading design
+  // Customized Js Code for initializing game with loading design
 
-    const startScreen = document.querySelector("#start-screen");
-    const startButton = document.querySelector("#start-button");
-    const unityContainer = document.querySelector("#unity-container");
-    const loadingBarContainer = document.querySelector("#loading-bar-container");    
+  const startScreen = document.querySelector("#start-screen");
+  const startButton = document.querySelector("#start-button");
+  const unityContainer = document.querySelector("#unity-container");
+  const loadingBarContainer = document.querySelector("#loading-bar-container");    
 
-    let MyGameInstance = "";
+  let MyGameInstance = "";
 
-    /*startButton.onclick = async () => {
-  // 1. UI Transition
-  startScreen.style.display = "none";
-  unityContainer.style.display = "block";
-
-  // 2. Configuration Object
+  const unityCanvas = document.querySelector("#unity-canvas");
   const config = {
-    dataUrl: "Build/Web GL Testing.data",
-    frameworkUrl: "Build/Web GL Testing.framework.js",
-    codeUrl: "Build/Web GL Testing.wasm",
-    symbolsUrl: "Build/Web GL Testing.symbols.json",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "HSI",
-    productName: "Unleash Play",
-    productVersion: "1.2.1 (93)",
-  };
-
-  try {
-    // 3. Initialize Unity
-    const canvas = document.querySelector("#unity-canvas");
-    const unityInstance = await createUnityInstance(canvas, config);
-    
-    // 4. Handle Success
-    MyGameInstance = unityInstance;
-    console.log("Unity Loaded!");
-
-    // 5. Send Token
-    sendTokenToUnity();
-
-  } catch (error) {
-    alert("Unity Loading Failed: " + error);
-  }
-};
-
-// Helper function to keep the main logic clean
-function sendTokenToUnity() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-  
-  if (token && MyGameInstance) {
-    console.log("Sending token:", token);
-    // Removed the 5s timeout; usually better to send once 'await' finishes
-    MyGameInstance.SendMessage("API Manager", "ReceiveToken", token);
-  }
-}*/
-
-const unityCanvas = document.querySelector("#unity-canvas");
-const config = {
   dataUrl: "Build/Web GL Testing.data",
   frameworkUrl: "Build/Web GL Testing.framework.js",
   codeUrl: "Build/Web GL Testing.wasm",
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (93)",
+  productVersion: "1.2.1 (94)",
 };
 
 // Start the loading process and store the promise
-const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
+/*const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
   // Optional: Update a hidden loading bar here
   console.log(`Loading: ${Math.round(100 * progress)}%`);
-});
+});*/
+const unityInstancePromise = createUnityInstance(unityCanvas, config);
 
 startButton.onclick = async () => {
-  // 2. UI Transition (Immediate feedback)
-  startButton.textContent = "Loading Game...";
+  // Disable the start button once clicked
   startButton.disabled = true;
 
   try {
-    // 3. Await the pre-existing promise
+    // Await if unityinstance promise result is completed
     const unityInstance = await unityInstancePromise;
 
-    // 4. Reveal Unity
+    // Disable the loading screen and enable the game screen
     startScreen.style.display = "none";
     unityContainer.style.display = "block";
 
-    // 5. Handle Success
+    // Assign the unityInstance to a variable that can be used anywhere in the script
     MyGameInstance = unityInstance;
+
+    // Unity game is loaded. UnityInstance can be used to send message and etc
     console.log("Unity Ready!");
     sendTokenToUnity();
 
   } catch (error) {
     alert("Unity Loading Failed: " + error);
     startButton.disabled = false;
-    startButton.textContent = "Start Game";
   }
 };
 
+// Send the token of the user back to unity once the game instance is created
 function sendTokenToUnity() {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
@@ -163,7 +120,8 @@ function sendTokenToUnity() {
   }
 }
 
-    let state;
+  // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
+  let state;
 
     function sendAppStateToUnity() {
       window.onFlutterMessage = function (msg) {
@@ -188,82 +146,11 @@ function sendTokenToUnity() {
 
     sendAppStateToUnity();
 
-    /*startButton.onclick = () => {
-  // Hide the button so it can't be clicked twice
-  startScreen.style.display = "none";
-  unityContainer.style.display = "block";
-
-  createUnityInstance(document.querySelector("#unity-canvas"), {
-    dataUrl: "Build/Web GL Testing.data",
-    frameworkUrl: "Build/Web GL Testing.framework.js",
-    codeUrl: "Build/Web GL Testing.wasm",
-    symbolsUrl: "Build/Web GL Testing.symbols.json",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "HSI",
-    productName: "Unleash Play",
-    productVersion: "1.2.1 (93)",
-    // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-  }).then((unityInstance) => {
-    // Store the instance globally so you can call unityInstance.SendMessage() from JS
-      MyGameInstance = unityInstance;
-
-      console.log("Hello Instance !");
-  }).catch((message) => {
-    alert(message);
-  });
-
-  if (MyGameInstance != null) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const myVar = urlParams.get("token");
-      console.log(myVar);
-
-      setTimeout(function () {
-        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-      }, 5000);
-    }
-    else {
-      console.log("MyGameInstance is null!");
-    };
-};*/
-
-
-    // Vanilla Code js for intializing
-    /*let MyGameInstance = "";
-
-    createUnityInstance(document.querySelector("#unity-canvas"), {
-      dataUrl: "Build/Web GL Testing.data",
-      frameworkUrl: "Build/Web GL Testing.framework.js",
-      codeUrl: "Build/Web GL Testing.wasm",
-      symbolsUrl: "Build/Web GL Testing.symbols.json",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "HSI",
-      productName: "Unleash Play",
-      productVersion: "1.2.1 (93)",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then((unityInstance) => {
-        // 2. Assign the internal instance to your global variable
-        MyGameInstance = unityInstance;
-
-        console.log("Hello Instance !");
-      });
-
-    if (MyGameInstance != null) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const myVar = urlParams.get("token");
-      console.log(myVar);
-
-      setTimeout(function () {
-        MyGameInstance.SendMessage("API Manager", "ReceiveToken", myVar);
-      }, 5000);
-    }
-    else {
-      console.log("MyGameInstance is null!");
-    };*/
-
   </script>
+
   <!--Script for the loading bar-->
   <script>
+
     window.addEventListener('load', function () {
       const startButton = document.getElementById('start-button');
       const loadingBarFill = document.getElementById('loading-bar-fill');
@@ -281,6 +168,7 @@ function sendTokenToUnity() {
         versionText.textContent = "";
       });
     });
+
   </script>
 </body>
 
