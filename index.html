@@ -20,7 +20,7 @@
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (100)</p>
+      <p id="version-text">v1.2.1 (101)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -74,7 +74,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (100)",
+  productVersion: "1.2.1 (101)",
 };
 
 // Make loading bar follow real Unity progress
@@ -86,7 +86,7 @@ function UnityProgress(progress) {
 
   if (progress < 1) {
     // While loading: update loading bar
-    loadingText.textContent = "Prearing pets... ";
+    loadingText.textContent = "Preparing pets... ";
   } else {
     // Finished loading: hide bar, show PLAY, clear texts
     loadingBarContainer.style.display = "none";
