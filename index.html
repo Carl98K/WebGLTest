@@ -15,12 +15,12 @@
     <div id="background-icons">
       <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon"><br>
 
-      <p id="loading-text">Preparing pets...</p>
+      <p id="loading-text"></p>
       <!-- loading bar shown first -->
       <div id="loading-bar-container">
         <div id="loading-bar-fill"></div>
       </div>
-      <p id="version-text">v1.2.1 (97)</p>
+      <p id="version-text">v1.2.1 (100)</p>
       <button id="start-button">
         <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
         <p id="button-text">PLAY</p>
@@ -62,23 +62,49 @@
   const startButton = document.querySelector("#start-button");
   const unityContainer = document.querySelector("#unity-container");
   const loadingBarContainer = document.querySelector("#loading-bar-container");    
+  const loadingBarFill = document.getElementById('loading-bar-fill');
 
   let MyGameInstance = "";
 
   const unityCanvas = document.querySelector("#unity-canvas");
   const config = {
-  dataUrl: "Build/Web GL Testing.data.unityweb",
-  frameworkUrl: "Build/Web GL Testing.framework.js.unityweb",
-  codeUrl: "Build/Web GL Testing.wasm.unityweb",
+  dataUrl: "Build/Web GL Testing.data",
+  frameworkUrl: "Build/Web GL Testing.framework.js",
+  codeUrl: "Build/Web GL Testing.wasm",
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (97)",
+  productVersion: "1.2.1 (100)",
 };
+
+// Make loading bar follow real Unity progress
+function UnityProgress(progress) {
+  const loadingText = document.getElementById("loading-text");
+  const versionText = document.getElementById("version-text");
+
+  const percent = Math.round(progress * 100);
+
+  if (progress < 1) {
+    // While loading: update loading bar
+    loadingText.textContent = "Prearing pets... ";
+  } else {
+    // Finished loading: hide bar, show PLAY, clear texts
+    loadingBarContainer.style.display = "none";
+    startButton.style.display = "inline-block";
+    loadingText.textContent = "";
+    versionText.textContent = "";
+  }
+}
 
 /*Create unity instance and load the config of the game.
   The promise result is stored on the variable. */
-const unityInstancePromise = createUnityInstance(unityCanvas, config);
+const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
+  const percent = Math.round(progress * 100);
+  // Fill our custom bar based on Unity load %
+  loadingBarFill.style.width = percent + "%";
+
+  UnityProgress(progress);
+});
 
 startButton.onclick = async () => {
   // Disable the start button once clicked
@@ -138,29 +164,6 @@ function sendTokenToUnity() {
     }
 
     sendAppStateToUnity();
-
-  </script>
-
-  <!--Script for the loading bar-->
-  <script>
-
-    window.addEventListener('load', function () {
-      const startButton = document.getElementById('start-button');
-      const loadingBarFill = document.getElementById('loading-bar-fill');
-      const loadingBarContainer = document.getElementById('loading-bar-container');
-      const loadingText = document.getElementById('loading-text');
-      const versionText = document.getElementById('version-text');
-
-      if (!startButton || !loadingBarFill || !loadingBarContainer) return;
-
-      //5s loading-bar then button show
-      loadingBarFill.addEventListener('animationend', function () {
-        loadingBarContainer.style.display = 'none';
-        startButton.style.display = 'inline-block';
-        loadingText.textContent = "";
-        versionText.textContent = "";
-      });
-    });
 
   </script>
 </body>
