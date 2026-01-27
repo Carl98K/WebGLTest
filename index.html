@@ -11,22 +11,13 @@
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
 
-  <div id="start-screen">
+<div id="start-screen">
     <div id="background-icons">
-      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon"><br>
-
+      <div class="dim-overlay"></div>
       <p id="loading-text"></p>
-      <!-- loading bar shown first -->
-      <div id="loading-bar-container">
-        <div id="loading-bar-fill"></div>
-      </div>
-      <p id="version-text">v1.2.1 (101)</p>
-      <button id="start-button">
-        <img id="button-img" src="TemplateData/Button 3.png" alt="button image">
-        <p id="button-text">PLAY</p>
-      </button>
     </div>
-  </div>
+</div>
+
 
   <div id="unity-container" style="display: none;">
     <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
@@ -59,10 +50,8 @@
   // Customized Js Code for initializing game with loading design
 
   const startScreen = document.querySelector("#start-screen");
-  const startButton = document.querySelector("#start-button");
   const unityContainer = document.querySelector("#unity-container");
-  const loadingBarContainer = document.querySelector("#loading-bar-container");    
-  const loadingBarFill = document.getElementById('loading-bar-fill');
+
 
   let MyGameInstance = "";
 
@@ -74,7 +63,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.1 (101)",
+  productVersion: "1.2.2 (103)",
 };
 
 // Make loading bar follow real Unity progress
@@ -82,54 +71,53 @@ function UnityProgress(progress) {
   const loadingText = document.getElementById("loading-text");
   const versionText = document.getElementById("version-text");
 
-  const percent = Math.round(progress * 100);
+
 
   if (progress < 1) {
     // While loading: update loading bar
-    loadingText.textContent = "Preparing pets... ";
+    loadingText.textContent = "";
   } else {
     // Finished loading: hide bar, show PLAY, clear texts
-    loadingBarContainer.style.display = "none";
-    startButton.style.display = "inline-block";
-    loadingText.textContent = "";
-    versionText.textContent = "";
+    startScreen.style.display = "none";
+    unityContainer.style.display = "block";
+    
+    unityInstancePromise.then(unityInstance => {
+    MyGameInstance = unityInstance;
+    sendTokenToUnity();
+    });
   }
 }
 
 /*Create unity instance and load the config of the game.
   The promise result is stored on the variable. */
 const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
-  const percent = Math.round(progress * 100);
-  // Fill our custom bar based on Unity load %
-  loadingBarFill.style.width = percent + "%";
-
   UnityProgress(progress);
 });
 
-startButton.onclick = async () => {
-  // Disable the start button once clicked
-  startButton.disabled = true;
+// startButton.onclick = async () => {
+//   // Disable the start button once clicked
+//   startButton.disabled = true;
 
-  try {
-    // Await if unityinstance promise result is completed
-    const unityInstance = await unityInstancePromise;
+//   try {
+//     // Await if unityinstance promise result is completed
+//     const unityInstance = await unityInstancePromise;
 
-    // Disable the loading screen and enable the game screen
-    startScreen.style.display = "none";
-    unityContainer.style.display = "block";
+//     // Disable the loading screen and enable the game screen
+//     startScreen.style.display = "none";
+//     unityContainer.style.display = "block";
 
-    // Assign the unityInstance to a variable that can be used anywhere in the script
-    MyGameInstance = unityInstance;
+//     // Assign the unityInstance to a variable that can be used anywhere in the script
+//     MyGameInstance = unityInstance;
 
-    // Unity game is loaded. UnityInstance can be used to send message and etc
-    console.log("Unity Ready!");
-    sendTokenToUnity();
+//     // Unity game is loaded. UnityInstance can be used to send message and etc
+//     console.log("Unity Ready!");
+//     sendTokenToUnity();
 
-  } catch (error) {
-    alert("Unity Loading Failed: " + error);
-    startButton.disabled = false;
-  }
-};
+//   } catch (error) {
+//     alert("Unity Loading Failed: " + error);
+//     startButton.disabled = false;
+//   }
+// };
 
 // Send the token of the user back to unity once the game instance is created
 function sendTokenToUnity() {
