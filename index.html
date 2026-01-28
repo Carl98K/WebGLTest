@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Unity WebGL Player | Unleash Play</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
@@ -20,7 +21,7 @@
 
   <div id="unity-container" style="display: none;">
     <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
-      style="width: 540px; height: 960px; background: #231F20"></canvas>
+      style="width: 540px; height: 960px; background: #231F20; touch-action: none;"></canvas>
   </div>
 
   <!-- Vanilla code for unity canvas game -->
@@ -62,7 +63,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (109)",
+  productVersion: "1.2.2 (110)",
 };
 
 // Make loading bar follow real Unity progress
