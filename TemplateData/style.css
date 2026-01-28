@@ -31,7 +31,7 @@
     #background-icons {
       width: 100%;
       height: 100%;
-      background-image: url(petOverviewBG.png);
+      background-image: url(petOverview.png);
       background-repeat: repeat ;
       background-position: 0 0;
       background-size: cover;
@@ -42,7 +42,7 @@
       /* animation: diagonal-scroll 5s linear infinite; */
     }
 
-     .dim-overlay {
+     /* .dim-overlay {
       position: absolute;
       top: 0;
       left: 0;
@@ -50,7 +50,7 @@
       height: 100%;
       background: rgb(0, 0, 0, 0.5);
       z-index: 1;
-    }
+    } */
 
 
     /* @keyframes diagonal-scroll {
