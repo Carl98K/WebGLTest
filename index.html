@@ -62,7 +62,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (134)",
+  productVersion: "1.2.2 (135)",
 };
 
 // Make loading bar follow real Unity progress
@@ -82,7 +82,18 @@ function UnityProgress(progress) {
     
     unityInstancePromise.then(unityInstance => {
     MyGameInstance = unityInstance;
+
+      document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      // SendMessage(ObjectName, MethodName)
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
+    } else {
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
+    }
+  });
+
     sendTokenToUnity();
+    
     });
   }
 }
@@ -92,31 +103,6 @@ function UnityProgress(progress) {
 const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
   UnityProgress(progress);
 });
-
-// startButton.onclick = async () => {
-//   // Disable the start button once clicked
-//   startButton.disabled = true;
-
-//   try {
-//     // Await if unityinstance promise result is completed
-//     const unityInstance = await unityInstancePromise;
-
-//     // Disable the loading screen and enable the game screen
-//     startScreen.style.display = "none";
-//     unityContainer.style.display = "block";
-
-//     // Assign the unityInstance to a variable that can be used anywhere in the script
-//     MyGameInstance = unityInstance;
-
-//     // Unity game is loaded. UnityInstance can be used to send message and etc
-//     console.log("Unity Ready!");
-//     sendTokenToUnity();
-
-//   } catch (error) {
-//     alert("Unity Loading Failed: " + error);
-//     startButton.disabled = false;
-//   }
-// };
 
 // Send the token of the user back to unity once the game instance is created
 function sendTokenToUnity() {
@@ -151,15 +137,6 @@ function sendTokenToUnity() {
     }
 
     sendAppStateToUnity();
-
-  document.addEventListener("visibilitychange", function() {
-    if (document.hidden) {
-      // SendMessage(ObjectName, MethodName)
-      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
-    } else {
-      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
-    }
-  });
 
   </script>
 </body>
