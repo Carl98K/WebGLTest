@@ -62,7 +62,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (133)",
+  productVersion: "1.2.2 (134)",
 };
 
 // Make loading bar follow real Unity progress
@@ -155,9 +155,9 @@ function sendTokenToUnity() {
   document.addEventListener("visibilitychange", function() {
     if (document.hidden) {
       // SendMessage(ObjectName, MethodName)
-      unityInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
     } else {
-      unityInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
     }
   });
 
