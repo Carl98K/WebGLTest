@@ -62,15 +62,13 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (135)",
+  productVersion: "1.2.2 (136)",
 };
 
 // Make loading bar follow real Unity progress
 function UnityProgress(progress) {
   const loadingText = document.getElementById("loading-text");
   const versionText = document.getElementById("version-text");
-
-
 
   if (progress < 1) {
     // While loading: update loading bar
@@ -83,14 +81,7 @@ function UnityProgress(progress) {
     unityInstancePromise.then(unityInstance => {
     MyGameInstance = unityInstance;
 
-      document.addEventListener("visibilitychange", function() {
-    if (document.hidden) {
-      // SendMessage(ObjectName, MethodName)
-      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
-    } else {
-      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
-    }
-  });
+    
 
     sendTokenToUnity();
     
@@ -137,6 +128,18 @@ function sendTokenToUnity() {
     }
 
     sendAppStateToUnity();
+
+    /*function sendBrowserListener()
+    {
+        document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      // SendMessage(ObjectName, MethodName)
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
+    } else {
+      MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
+    }
+  });
+    }*/
 
   </script>
 </body>
