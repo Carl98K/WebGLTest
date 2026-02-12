@@ -11,11 +11,11 @@
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
 
-  <div id="start-screen">
+<div id="start-screen">
     <div id="background-icons">
       <p id="loading-text"></p>
     </div>
-  </div>
+</div>
 
 
   <div id="unity-container" style="display: none;">
@@ -46,92 +46,92 @@
       document.body.style.textAlign = "left";
     }
 
-    // Customized Js Code for initializing game with loading design
+  // Customized Js Code for initializing game with loading design
 
-    const startScreen = document.querySelector("#start-screen");
-    const unityContainer = document.querySelector("#unity-container");
+  const startScreen = document.querySelector("#start-screen");
+  const unityContainer = document.querySelector("#unity-container");
 
 
-    let MyGameInstance = "";
+  let MyGameInstance = "";
 
-    const unityCanvas = document.querySelector("#unity-canvas");
-    const config = {
-      dataUrl: "Build/Web GL Testing.data",
-      frameworkUrl: "Build/Web GL Testing.framework.js",
+  const unityCanvas = document.querySelector("#unity-canvas");
+  const config = {
+  dataUrl: "Build/Web GL Testing.data",
+  frameworkUrl: "Build/Web GL Testing.framework.js",
   codeUrl: "Build/Web GL Testing.wasm",
   streamingAssetsUrl: "StreamingAssets",
-      companyName: "HSI",
-    productName: { { { JSON.stringify(PRODUCT_NAME) } } },
-    productVersion: { { { JSON.stringify(PRODUCT_VERSION) } } },
+  companyName: "HSI",
+  productName: "Unleash Play",
+  productVersion: "1.2.2 (133)",
 };
 
-    // Make loading bar follow real Unity progress
-    function UnityProgress(progress) {
-      const loadingText = document.getElementById("loading-text");
-      const versionText = document.getElementById("version-text");
+// Make loading bar follow real Unity progress
+function UnityProgress(progress) {
+  const loadingText = document.getElementById("loading-text");
+  const versionText = document.getElementById("version-text");
 
 
 
-      if (progress < 1) {
-        // While loading: update loading bar
-        loadingText.textContent = "";
-      } else {
-        // Finished loading: hide bar, show PLAY, clear texts
-        startScreen.style.display = "none";
-        unityContainer.style.display = "block";
-
-        unityInstancePromise.then(unityInstance => {
-          MyGameInstance = unityInstance;
-          sendTokenToUnity();
-        });
-      }
-    }
-
-    /*Create unity instance and load the config of the game.
-      The promise result is stored on the variable. */
-    const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
-      UnityProgress(progress);
+  if (progress < 1) {
+    // While loading: update loading bar
+    loadingText.textContent = "";
+  } else {
+    // Finished loading: hide bar, show PLAY, clear texts
+    startScreen.style.display = "none";
+    unityContainer.style.display = "block";
+    
+    unityInstancePromise.then(unityInstance => {
+    MyGameInstance = unityInstance;
+    sendTokenToUnity();
     });
+  }
+}
 
-    // startButton.onclick = async () => {
-    //   // Disable the start button once clicked
-    //   startButton.disabled = true;
+/*Create unity instance and load the config of the game.
+  The promise result is stored on the variable. */
+const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
+  UnityProgress(progress);
+});
 
-    //   try {
-    //     // Await if unityinstance promise result is completed
-    //     const unityInstance = await unityInstancePromise;
+// startButton.onclick = async () => {
+//   // Disable the start button once clicked
+//   startButton.disabled = true;
 
-    //     // Disable the loading screen and enable the game screen
-    //     startScreen.style.display = "none";
-    //     unityContainer.style.display = "block";
+//   try {
+//     // Await if unityinstance promise result is completed
+//     const unityInstance = await unityInstancePromise;
 
-    //     // Assign the unityInstance to a variable that can be used anywhere in the script
-    //     MyGameInstance = unityInstance;
+//     // Disable the loading screen and enable the game screen
+//     startScreen.style.display = "none";
+//     unityContainer.style.display = "block";
 
-    //     // Unity game is loaded. UnityInstance can be used to send message and etc
-    //     console.log("Unity Ready!");
-    //     sendTokenToUnity();
+//     // Assign the unityInstance to a variable that can be used anywhere in the script
+//     MyGameInstance = unityInstance;
 
-    //   } catch (error) {
-    //     alert("Unity Loading Failed: " + error);
-    //     startButton.disabled = false;
-    //   }
-    // };
+//     // Unity game is loaded. UnityInstance can be used to send message and etc
+//     console.log("Unity Ready!");
+//     sendTokenToUnity();
 
-    // Send the token of the user back to unity once the game instance is created
-    function sendTokenToUnity() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
+//   } catch (error) {
+//     alert("Unity Loading Failed: " + error);
+//     startButton.disabled = false;
+//   }
+// };
 
-      if (token && MyGameInstance) {
-        console.log("Sending token:", token);
-        // Removed the 5s timeout; usually better to send once 'await' finishes
-        MyGameInstance.SendMessage("API Manager", "ReceiveToken", token);
-      }
-    }
+// Send the token of the user back to unity once the game instance is created
+function sendTokenToUnity() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  
+  if (token && MyGameInstance) {
+    console.log("Sending token:", token);
+    // Removed the 5s timeout; usually better to send once 'await' finishes
+    MyGameInstance.SendMessage("API Manager", "ReceiveToken", token);
+  }
+}
 
-    // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
-    let state;
+  // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
+  let state;
 
     function sendAppStateToUnity() {
       window.onFlutterMessage = function (msg) {
@@ -152,14 +152,14 @@
 
     sendAppStateToUnity();
 
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) {
-        // SendMessage(ObjectName, MethodName)
-        MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
-      } else {
-        MyGameInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
-      }
-    });
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      // SendMessage(ObjectName, MethodName)
+      unityInstance.SendMessage('WebGLHandler', 'OnBrowserMinimised');
+    } else {
+      unityInstance.SendMessage('WebGLHandler', 'OnBrowserRestored');
+    }
+  });
 
   </script>
 </body>
