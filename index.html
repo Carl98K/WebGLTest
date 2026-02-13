@@ -13,6 +13,7 @@
 
 <div id="start-screen">
     <div id="background-icons">
+      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
       <p id="loading-text"></p>
     </div>
 </div>
@@ -62,61 +63,35 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (151)",
+  productVersion: "1.2.2 (152)",
 };
 
 // Make loading bar follow real Unity progress
 function UnityProgress(progress) {
   const loadingText = document.getElementById("loading-text");
-  const versionText = document.getElementById("version-text");
-
-
 
   if (progress < 1) {
-    // While loading: update loading bar
-    loadingText.textContent = "";
+    const percent = Math.round(progress * 100);
+  //  loadingText.textContent = percent + "%";
   } else {
-    // Finished loading: hide bar, show PLAY, clear texts
-    startScreen.style.display = "none";
-    unityContainer.style.display = "block";
-    
+    // Unity finished loading resources
     unityInstancePromise.then(unityInstance => {
-    MyGameInstance = unityInstance;
-    sendTokenToUnity();
+      MyGameInstance = unityInstance;
+
+      // Add delay to hide unty canvs
+      setTimeout(() => {
+        startScreen.style.display = "none";
+        unityContainer.style.display = "block";
+        sendTokenToUnity();
+      }, 2500); //for delay
     });
   }
 }
 
-/*Create unity instance and load the config of the game.
-  The promise result is stored on the variable. */
+// Create unity instance and load the config of the game. The promise result is stored on the variable.
 const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
   UnityProgress(progress);
 });
-
-// startButton.onclick = async () => {
-//   // Disable the start button once clicked
-//   startButton.disabled = true;
-
-//   try {
-//     // Await if unityinstance promise result is completed
-//     const unityInstance = await unityInstancePromise;
-
-//     // Disable the loading screen and enable the game screen
-//     startScreen.style.display = "none";
-//     unityContainer.style.display = "block";
-
-//     // Assign the unityInstance to a variable that can be used anywhere in the script
-//     MyGameInstance = unityInstance;
-
-//     // Unity game is loaded. UnityInstance can be used to send message and etc
-//     console.log("Unity Ready!");
-//     sendTokenToUnity();
-
-//   } catch (error) {
-//     alert("Unity Loading Failed: " + error);
-//     startButton.disabled = false;
-//   }
-// };
 
 // Send the token of the user back to unity once the game instance is created
 function sendTokenToUnity() {
@@ -150,9 +125,8 @@ function sendTokenToUnity() {
       };
     }
 
-    sendAppStateToUnity();
-
-  </script>
+  sendAppStateToUnity();
+</script>
 </body>
 
 </html>
