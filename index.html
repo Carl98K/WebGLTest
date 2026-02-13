@@ -63,7 +63,7 @@
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (147)",
+  productVersion: "1.2.2 (148)",
 };
 
 // Make loading bar follow real Unity progress
@@ -125,14 +125,28 @@ function sendTokenToUnity() {
       };
     }
 
-    sendAppStateToUnity();
+  sendAppStateToUnity();
 
-  canvas.addEventListener("webglcontextlost", (event) => {
-    event.preventDefault();
-    console.warn("WebGL context lost");
-  }, false);
+  function sendBrowserListener() {
+    document.addEventListener("visibilitychange", () => {
+      if (!MyGameInstance) return;
 
-  </script>
+      const method = document.hidden ? 'OnBrowserMinimised' : 'OnBrowserRestored';
+    
+      // Giving the engine a millisecond to breathe can prevent 
+      // execution during a state-change lock.
+      setTimeout(() => {
+        try {
+            MyGameInstance.SendMessage('WebGLFocusManager', method);
+        } catch (e) {
+            console.warn("Unity is not ready to receive messages yet.");
+        }
+    }, 100);
+  });
+}
+
+  sendBrowserListener();
+</script>
 </body>
 
 </html>
