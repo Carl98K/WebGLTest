@@ -13,6 +13,7 @@
 
 <div id="start-screen">
     <div id="background-icons">
+      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
       <p id="loading-text"></p>
     </div>
 </div>
@@ -23,8 +24,14 @@
       style="width: 540px; height: 960px; background: #231F20"></canvas>
   </div>
 
+  <!-- Vanilla code for unity canvas game -->
+  <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    style="width: 540px; height: 960px; background: #231F20"></canvas>-->
+
   <script src="Build/Web GL Testing.loader.js"></script>
+
   <script>
+
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       // Mobile device style: fill the whole browser client area with the game canvas:
       var meta = document.createElement('meta');
@@ -50,37 +57,38 @@
 
   const unityCanvas = document.querySelector("#unity-canvas");
   const config = {
-  dataUrl: "Build/Web GL Testing.data",
-  frameworkUrl: "Build/Web GL Testing.framework.js",
-  codeUrl: "Build/Web GL Testing.wasm",
+  dataUrl: "Build/Web GL Testing.data.br",
+  frameworkUrl: "Build/Web GL Testing.framework.js.br",
+  codeUrl: "Build/Web GL Testing.wasm.br",
   streamingAssetsUrl: "StreamingAssets",
   companyName: "HSI",
   productName: "Unleash Play",
-  productVersion: "1.2.2 (144)",
+  productVersion: "1.2.2 (145)",
 };
 
 // Make loading bar follow real Unity progress
 function UnityProgress(progress) {
   const loadingText = document.getElementById("loading-text");
-  const versionText = document.getElementById("version-text");
 
   if (progress < 1) {
-    // While loading: update loading bar
-    loadingText.textContent = "";
+    const percent = Math.round(progress * 100);
+  //  loadingText.textContent = percent + "%";
   } else {
-    // Finished loading: hide bar, show PLAY, clear texts
-    startScreen.style.display = "none";
-    unityContainer.style.display = "block";
-    
+    // Unity finished loading resources
     unityInstancePromise.then(unityInstance => {
-    MyGameInstance = unityInstance;
-    sendTokenToUnity();
+      MyGameInstance = unityInstance;
+
+      // Add delay to hide unty canvs
+      setTimeout(() => {
+        startScreen.style.display = "none";
+        unityContainer.style.display = "block";
+        sendTokenToUnity();
+      }, 2500); //for delay
     });
   }
 }
 
-/*Create unity instance and load the config of the game.
-  The promise result is stored on the variable. */
+// Create unity instance and load the config of the game. The promise result is stored on the variable.
 const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
   UnityProgress(progress);
 });
@@ -100,49 +108,31 @@ function sendTokenToUnity() {
   // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
   let state;
 
-  function sendAppStateToUnity() {
-    window.onFlutterMessage = function (msg) {
-      console.log('Received message from Flutter:', msg);
+    function sendAppStateToUnity() {
+      window.onFlutterMessage = function (msg) {
+        console.log('Received message from Flutter:', msg);
 
-      state = JSON.stringify(msg);
+        state = JSON.stringify(msg);
 
-      if (MyGameInstance){
-        MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
-      }
-
-      if (msg.action === 'pause') {
-          // Pause game/audio
-        console.log('Pausing due to', msg.reason);
-      }
-    };
-  }
-
-  sendAppStateToUnity();
-
-function sendBrowserListener() {
-  document.addEventListener("visibilitychange", () => {
-    if (!MyGameInstance) return;
-
-    const method = document.hidden ? 'OnBrowserMinimised' : 'OnBrowserRestored';
-    
-    // Giving the engine a millisecond to breathe can prevent 
-    // execution during a state-change lock.
-    setTimeout(() => {
-        try {
-            MyGameInstance.SendMessage('WebGLHandler', method);
-        } catch (e) {
-            console.warn("Unity is not ready to receive messages yet.");
+        if (MyGameInstance) {
+          MyGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
         }
-    }, 100);
-  });
-}
 
-  //sendBrowserListener();
+        if (msg.action === 'pause') {
+          // Pause game/audio
+          console.log('Pausing due to', msg.reason);
+        }
+      };
+    }
 
-  unityCanvas.addEventListener("webglcontextlost", (event) => {
+    sendAppStateToUnity();
+
+  canvas.addEventListener("webglcontextlost", (event) => {
     event.preventDefault();
+    console.warn("WebGL context lost");
   }, false);
-</script>
+
+  </script>
 </body>
 
 </html>

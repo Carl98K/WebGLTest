@@ -31,7 +31,7 @@
     #background-icons {
       width: 100%;
       height: 100%;
-      background-image: url(petOverview.png);
+      background-image: url(icons.png);
       background-repeat: repeat ;
       background-position: 0 0;
       background-size: cover;
@@ -39,21 +39,10 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      /* animation: diagonal-scroll 5s linear infinite; */
+      animation: diagonal-scroll 5s linear infinite;
     }
 
-     /* .dim-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgb(0, 0, 0, 0.5);
-      z-index: 1;
-    } */
-
-
-    /* @keyframes diagonal-scroll {
+    @keyframes diagonal-scroll {
       from {
         background-position: 0 0;
       }
@@ -61,7 +50,7 @@
       to {
         background-position: -200px 200px;
       }
-    } */
+    }
 
     #dog-icon {
       width: 75px;
@@ -124,7 +113,7 @@
     }
 
     /* loading bar */
-    #loading-bar-container {
+    /* #loading-bar-container {
       width: 60%;
       height: 18px;
       border-radius: 10px;
@@ -143,4 +132,4 @@
     @keyframes loading-fill {
       from { width: 0%; }
       to   { width: 100%; }
-    }
+    } */
