@@ -58,13 +58,13 @@
     const userToken = urlParams.get("token");
 
     const config = {
-      dataUrl: "Build/Web GL Testing.data",
-      frameworkUrl: "Build/Web GL Testing.framework.js",
-  codeUrl: "Build/Web GL Testing.wasm",
+      dataUrl: "Build/Web GL Testing.data.unityweb",
+      frameworkUrl: "Build/Web GL Testing.framework.js.unityweb",
+  codeUrl: "Build/Web GL Testing.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.2 (162)",
+    productVersion: "1.2.2 (163)",
 };
 
     sendAppStateToUnity();
@@ -81,14 +81,6 @@
 
       // Send token immediately once visible
       sendTokenToUnity();
-
-      /*setTimeout(() => {
-        startScreen.style.display = "none";
-        unityContainer.style.display = "block";
-
-        // Send token immediately once visible
-        sendTokenToUnity();
-      }, 2100); */
     })
       .catch((message) => {
         console.error("Unity Loading Failed:", message);
