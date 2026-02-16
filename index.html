@@ -64,56 +64,25 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.2 (159)",
+    productVersion: "1.2.2 (160)",
 };
 
     sendAppStateToUnity();
 
-    /*// Make loading bar follow real Unity progress
-    function UnityProgress(progress) {
-      //const loadingText = document.getElementById("loading-text");
-
-      if (progress < 1) {
-        //const percent = Math.round(progress * 100);
-        //  loadingText.textContent = percent + "%";
-        console.log("Unity web gl progress still loading.");
-      } else {
-        // Unity finished loading resources
-        unityInstancePromise.then(unityInstance => {
-          myGameInstance = unityInstance;
-
-          // Add delay to hide unity splash screen after loading
-          setTimeout(() => {
-            startScreen.style.display = "none";
-            unityContainer.style.display = "block";
-            sendTokenToUnity();
-          }, 2500); //for delay
-        });
-      }
-    }
-
-    // Create unity instance and load the config of the game. The promise result is stored on the variable.
-    const unityInstancePromise = createUnityInstance(unityCanvas, config, (progress) => {
-      UnityProgress(progress);
-    });*/
-
     createUnityInstance(unityCanvas, config, (progress) => {
     }).then((unityInstance) => {
-      // SUCCESS: Unity is fully loaded and initialized
+      // Success: Unity is fully loaded and initialized
       myGameInstance = unityInstance;
 
-      // OPTIMIZATION: Reduce the artificial delay. 
-      // 2500ms is a long time for a user to stare at a 'finished' bar.
-      // We use a CSS class for a smooth fade instead of an instant 'display: none'.
       startScreen.classList.add("fade-out");
 
       setTimeout(() => {
         startScreen.style.display = "none";
         unityContainer.style.display = "block";
 
-        // Fire logic immediately once visible
+        // Send token immediately once visible
         sendTokenToUnity();
-      }, 2500); // Reduced to 500ms for a snappier feel
+      }, 2000); 
     })
       .catch((message) => {
         console.error("Unity Loading Failed:", message);
