@@ -76,13 +76,19 @@
 
       startScreen.classList.add("fade-out");
 
-      setTimeout(() => {
+      startScreen.style.display = "none";
+      unityContainer.style.display = "block";
+
+      // Send token immediately once visible
+      sendTokenToUnity();
+
+      /*setTimeout(() => {
         startScreen.style.display = "none";
         unityContainer.style.display = "block";
 
         // Send token immediately once visible
         sendTokenToUnity();
-      }, 2100); 
+      }, 2100); */
     })
       .catch((message) => {
         console.error("Unity Loading Failed:", message);
