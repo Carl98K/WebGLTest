@@ -64,7 +64,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Unleash Play",
-    productVersion: "1.2.2 (158)",
+    productVersion: "1.2.2 (159)",
 };
 
     sendAppStateToUnity();
@@ -121,9 +121,9 @@
 
     // Send the token of the user back to unity once the game instance is created
     function sendTokenToUnity() {
-      if (token && myGameInstance) {
-        console.log("Sending token:", token);
-        myGameInstance.SendMessage("API Manager", "ReceiveToken", token);
+      if (userToken && myGameInstance) {
+        console.log("Sending token:", userToken);
+        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
       }
     }
 
