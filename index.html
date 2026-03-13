@@ -1,101 +1,114 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unleash Play</title>
-  
-  <link rel="preload" href="Build/Web GL Testing.loader.js" as="script">
-  <link rel="preload" href="Build/Web GL Testing.framework.js" as="script">
-  <link rel="preload" href="Build/Web GL Testing.data" as="fetch" crossorigin>
-  
+  <title>Unity WebGL Player | Unleash Play</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
-
-  <style>
-    /* 2. MINIMAL CSS: Just the dog and a background */
-    body { background: #232323; margin: 0; overflow: hidden; }
-    
-    #start-screen {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #232323; z-index: 99;
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease-out; /* Smooth fade when done */
-    }
-
-    #unity-canvas { width: 100%; height: 100%; background: #232323; }
-    
-    .hidden { opacity: 0; pointer-events: none; }
-  </style>
+  <link rel="stylesheet" href="TemplateData/style.css">
 </head>
 
-<body>
+<body style="text-align: center; padding: 0; border: 0; margin: 0;">
+
   <div id="start-screen">
-    <img src="TemplateData/Dog loading.gif" alt="Loading..." width="120">
+    <div id="background-icons">
+      <img id="dog-icon" src="TemplateData/Dog loading.gif" alt="dog icon">
+      <p id="loading-text"></p>
+    </div>
   </div>
 
-  <div id="unity-container">
-    <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+  <div id="unity-container" style="display: none;">
+    <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+      style="width: 540px; height: 960px; background: #231F20"></canvas>
   </div>
+
+  <!-- Vanilla code for unity canvas game -->
+  <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    style="width: 540px; height: 960px; background: #231F20"></canvas>-->
 
   <script src="Build/Web GL Testing.loader.js"></script>
 
   <script>
+(() => {
+    // 1. Cache DOM Elements
+    const head = document.head;
+    const body = document.body;
+    const unityCanvas = document.querySelector("#unity-canvas");
+    const unityContainer = document.querySelector("#unity-container");
     const startScreen = document.querySelector("#start-screen");
-    const canvas = document.querySelector("#unity-canvas");
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const userToken = urlParams.get("token");
-
-    // Mobile Handling
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      var meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
-      canvas.style.position = "fixed";
-    }
-
-    const config = {
-      dataUrl: "Build/Web GL Testing.data",
-      frameworkUrl: "Build/Web GL Testing.framework.js",
-      codeUrl: "Build/Web GL Testing.wasm",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "HSI",
-      productName: "Unleash Play",
-      productVersion: "1.2.2 (190)",
-    };
 
     let myGameInstance = null;
 
-    // Load Unity Instance
-    createUnityInstance(canvas, config, (progress) => {
-      // Logic for bar removed. Just waiting for completion.
-    }).then((unityInstance) => {
-      myGameInstance = unityInstance;
-      
-      // Hide loading screen and start game
-      startScreen.classList.add("hidden");
-      
-      // Wait for fade animation to finish before removing from DOM
-      setTimeout(() => { 
-        startScreen.style.display = "none"; 
-        sendTokenToUnity();
-      }, 600);
+    // 2. Optimized Mobile Handling
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        const meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        head.appendChild(meta);
 
-    }).catch((err) => alert(err));
-
-    function sendTokenToUnity() {
-      if (userToken && myGameInstance) {
-        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
-      }
+        Object.assign(unityCanvas.style, {
+            width: "100%",
+            height: "100%",
+            position: "fixed"
+        });
+        body.style.textAlign = "left";
     }
 
-    // Flutter listener
-    window.onFlutterMessage = function (msg) {
-      if (myGameInstance) {
-        myGameInstance.SendMessage("Sound Handler", "ReceiveValue", JSON.stringify(msg));
-      }
+    // 3. Extract URL Data early
+    const urlParams = new URLSearchParams(window.location.search);
+    const userToken = urlParams.get("token");
+
+    // 4. Unity Configuration
+    const config = {
+        dataUrl: "Build/Web GL Testing.data",
+        frameworkUrl: "Build/Web GL Testing.framework.js",
+        codeUrl: "Build/Web GL Testing.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "HSI",
+        productName: "Unleash Play",
+        productVersion: "1.2.2 (191)",
     };
-  </script>
+
+    // 5. Setup Communication Bridges immediately
+    window.onFlutterMessage = (msg) => {
+        console.log('Flutter Message:', msg);
+        if (myGameInstance) {
+            myGameInstance.SendMessage("Sound Handler", "ReceiveValue", JSON.stringify(msg));
+        }
+        if (msg.action === 'pause') {
+            console.log('Pausing:', msg.reason);
+        }
+    };
+
+    const sendTokenToUnity = () => {
+        if (userToken && myGameInstance) {
+            myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
+        }
+    };
+
+    // 6. Initialize Unity
+    createUnityInstance(unityCanvas, config, (progress) => {
+        // Optional: Update a progress bar here
+    }).then((unityInstance) => {
+        myGameInstance = unityInstance;
+
+        // Visual Transition: Handle Fade-out properly
+        startScreen.classList.add("fade-out");
+        
+        // Wait for CSS transition (usually 500ms) before hiding and showing game
+        setTimeout(() => {
+            startScreen.style.display = "none";
+            unityContainer.style.display = "block";
+            sendTokenToUnity();
+        }, 500); 
+
+    }).catch((err) => {
+        console.error("Unity Initialization Error:", err);
+    });
+})();
+</script>
 </body>
+
 </html>
