@@ -31,84 +31,86 @@
   <script src="Build/Web GL Testing.loader.js"></script>
 
   <script>
-(() => {
-    // 1. Cache DOM Elements
-    const head = document.head;
-    const body = document.body;
-    const unityCanvas = document.querySelector("#unity-canvas");
-    const unityContainer = document.querySelector("#unity-container");
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+
+      var canvas = document.querySelector("#unity-canvas");
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.position = "fixed";
+
+      document.body.style.textAlign = "left";
+    }
+
+    // Customized Js Code for initializing game with loading design
     const startScreen = document.querySelector("#start-screen");
+    const unityContainer = document.querySelector("#unity-container");
+    const unityCanvas = document.querySelector("#unity-canvas");
 
     let myGameInstance = null;
 
-    // 2. Optimized Mobile Handling
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        const meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        head.appendChild(meta);
-
-        Object.assign(unityCanvas.style, {
-            width: "100%",
-            height: "100%",
-            position: "fixed"
-        });
-        body.style.textAlign = "left";
-    }
-
-    // 3. Extract URL Data early
     const urlParams = new URLSearchParams(window.location.search);
     const userToken = urlParams.get("token");
 
-    // 4. Unity Configuration
     const config = {
-        dataUrl: "Build/Web GL Testing.data",
-        frameworkUrl: "Build/Web GL Testing.framework.js",
-        codeUrl: "Build/Web GL Testing.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "HSI",
-        productName: "Unleash Play",
-        productVersion: "1.2.2 (191)",
-    };
+      dataUrl: "Build/Web GL Testing.data",
+      frameworkUrl: "Build/Web GL Testing.framework.js",
+  codeUrl: "Build/Web GL Testing.wasm",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "HSI",
+    productName: "Unleash Play",
+    productVersion: "1.3.0 (192)",
+};
 
-    // 5. Setup Communication Bridges immediately
-    window.onFlutterMessage = (msg) => {
-        console.log('Flutter Message:', msg);
-        if (myGameInstance) {
-            myGameInstance.SendMessage("Sound Handler", "ReceiveValue", JSON.stringify(msg));
-        }
-        if (msg.action === 'pause') {
-            console.log('Pausing:', msg.reason);
-        }
-    };
+    sendAppStateToUnity();
 
-    const sendTokenToUnity = () => {
-        if (userToken && myGameInstance) {
-            myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
-        }
-    };
-
-    // 6. Initialize Unity
     createUnityInstance(unityCanvas, config, (progress) => {
-        // Optional: Update a progress bar here
     }).then((unityInstance) => {
-        myGameInstance = unityInstance;
+      // Success: Unity is fully loaded and initialized
+      myGameInstance = unityInstance;
 
-        // Visual Transition: Handle Fade-out properly
-        startScreen.classList.add("fade-out");
-        
-        // Wait for CSS transition (usually 500ms) before hiding and showing game
-        setTimeout(() => {
-            startScreen.style.display = "none";
-            unityContainer.style.display = "block";
-            sendTokenToUnity();
-        }, 500); 
+      startScreen.classList.add("fade-out");
 
-    }).catch((err) => {
-        console.error("Unity Initialization Error:", err);
-    });
-})();
-</script>
+      startScreen.style.display = "none";
+      unityContainer.style.display = "block";
+
+      // Send token immediately once visible
+      sendTokenToUnity();
+    })
+      .catch((message) => {
+        console.error("Unity Loading Failed:", message);
+      });
+
+    // Send the token of the user back to unity once the game instance is created
+    function sendTokenToUnity() {
+      if (userToken && myGameInstance) {
+        console.log("Sending token:", userToken);
+        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
+      }
+    }
+
+    // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
+    function sendAppStateToUnity() {
+      window.onFlutterMessage = function (msg) {
+        const state = JSON.stringify(msg);
+        console.log('Received message from Flutter:', msg);
+
+        if (myGameInstance)
+          myGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
+
+        if (msg.action === 'pause') {
+          // Pause game/audio
+          console.log('Pausing due to', msg.reason);
+        }
+      };
+    }
+
+  </script>
 </body>
 
 </html>
