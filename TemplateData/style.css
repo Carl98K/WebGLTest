@@ -1,119 +1,121 @@
-      
-    @font-face {
-      font-family: 'Pixeloid-Sans Bold';
-      src: url(Font/PixeloidSans-Bold.ttf) format('truetype');
-    }
+      @font-face {
+        font-family: 'Pixeloid-Sans Bold';
+        src: url(Font/PixeloidSans-Bold.ttf) format('truetype');
+      }
 
+      body {
+        overflow: hidden;
+      }
 
-    body {
-      overflow: hidden;
-    }
+      #start-screen {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100vw;
+        height: 100vh;
+        max-width: 540px;
+        max-height: 1080px;
+        background-color: #F7E7CE;
+        color: white;
+        z-index: 10;
+        overflow: hidden;
+      }
 
-    #start-screen {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 100vw;
-      height: 100vh;
-      max-width: 540px;
-      max-height: 1080px;
-      background-color: #F7E7CE;
-      color: white;
-      z-index: 10;
-      overflow: hidden;
-    }
+      #start-screen::-webkit-scrollbar {
+        display: none;
+      }
 
-     #start-screen::-webkit-scrollbar{
-      display: none;
-    }
-
-    #background-icons {
-      width: 100%;
-      height: 100%;
-      background-image: url(icons.png);
-      background-repeat: repeat ;
-      background-position: 0 0;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      animation: diagonal-scroll 5s linear infinite;
-    }
-
-    @keyframes diagonal-scroll {
-      from {
+      #background-icons {
+        width: 100%;
+        height: 100%;
+        background-image: url(icons.png);
+        background-repeat: repeat;
         background-position: 0 0;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        animation: diagonal-scroll 5s linear infinite;
       }
 
-      to {
-        background-position: -200px 200px;
+      @keyframes diagonal-scroll {
+        from {
+          background-position: 0 0;
+        }
+
+        to {
+          background-position: -200px 200px;
+        }
       }
-    }
 
-    #dog-icon {
-      width: 75px;
-      height: 60px;
-      margin-bottom: -20px;
-    }
+      #dog-icon {
+        width: 75px;
+        height: 60px;
+        margin-bottom: -20px;
+      }
 
-    p {
-      margin: 0px;
-      padding: 0px;
-      text-align: center;
-      font-family: 'Pixeloid-Sans Bold';
-      font-weight: bold;
-      color: black;
-    }
+      p {
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        font-family: 'Pixeloid-Sans Bold';
+        font-weight: bold;
+        color: black;
+      }
 
-    #loading-text {
-      margin: 15px 0px 10px 0px;
-      font-size: 17px;
-    }
+      #version-text {
+        font-size: 12px;
+        margin-top: 5px;
+      }
 
-    #version-text {
-      font-size: 12px;
-      margin-top: 5px;
-    }
+      #start-button {
+        position: relative;
+        cursor: pointer;
+        color: white;
+        border: none;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        /* hide after loading */
+        display: none;
+      }
 
-    #start-button {
-      position: relative;
-      cursor: pointer;
-      color: white;
-      border: none;
-      background: transparent;
-      padding: 0;
-      margin: 0;
-      /* hide after loading */
-      display: none; 
-    }
+      #button-img {
+        display: block;
+        width: 110px;
+        height: 65px;
+        padding: 0;
+        margin: 0;
+      }
 
-    #button-img {
-      display: block;
-      width: 110px;
-      height: 65px;
-      padding: 0;
-      margin: 0;
-    }
+      #button-text {
+        position: absolute;
+        top: 42%;
+        left: 52%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+        margin: 0;
 
-    #button-text {
-      position: absolute;
-      top: 42%;
-      left: 52%;
-      transform: translate(-50%, -50%);
-      padding: 0;
-      margin: 0;
+        letter-spacing: 1px;
+        font-family: 'Pixeloid-Sans Bold';
+        font-size: 20.5px;
+        color: white;
+        text-shadow: -1.5px 1.5px 2px rgba(0, 0, 0, 0.521);
+      }
 
-      letter-spacing: 1px;
-      font-family: 'Pixeloid-Sans Bold';
-      font-size: 20.5px;
-      color: white;
-      text-shadow: -1.5px 1.5px 2px rgba(0, 0, 0, 0.521);
-    }
+      #loading-text {
+        font-family: sans-serif;
+        color: white;
+        /* Or whatever matches your theme */
+        font-size: 1.2rem;
+        margin-top: 10px;
+        font-weight: bold;
+      }
 
-    /* loading bar */
-    /* #loading-bar-container {
+      /* loading bar */
+      /* #loading-bar-container {
       width: 60%;
       height: 18px;
       border-radius: 10px;
