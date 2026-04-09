@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity WebGL Player | Unleash Play</title>
+  <title>Unity WebGL Player | Uni-Jump</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
 </head>
@@ -28,7 +28,7 @@
   <!--<canvas id="unity-canvas" width=540 height=960 tabindex="-1"
     style="width: 540px; height: 960px; background: #231F20"></canvas>-->
 
-  <script src="Build/Web GL Testing QA Vercel ETC2.loader.js"></script>
+  <script src="Build/Web GL Testing Github.loader.js"></script>
 
   <script>
 
@@ -58,32 +58,57 @@
     const userToken = urlParams.get("token");
 
     const config = {
-      dataUrl: "Build/Web GL Testing QA Vercel ETC2.data",
-      frameworkUrl: "Build/Web GL Testing QA Vercel ETC2.framework.js",
-  codeUrl: "Build/Web GL Testing QA Vercel ETC2.wasm",
+      dataUrl: "Build/Web GL Testing Github.data",
+      frameworkUrl: "Build/Web GL Testing Github.framework.js",
+  codeUrl: "Build/Web GL Testing Github.wasm",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
-    productName: "Unleash Play",
-    productVersion: "1.3.0 (211)",
+    productName: "Uni-Jump",
+    productVersion: "1.2.0 (3)",
 };
 
-    const loadingText = document.querySelector("#loading-text");
+    sendAppStateToUnity();
 
-createUnityInstance(unityCanvas, config, (progress) => {
-    // 2. Calculate percentage and update the text
-    // progress is a value from 0 to 1
-    const percentage = Math.round(progress * 100);
-    loadingText.textContent = `Loading pets: ${percentage}%`;
-    
-}).then((unityInstance) => {
-    myGameInstance = unityInstance;
-    startScreen.classList.add("fade-out");
-    startScreen.style.display = "none";
-    unityContainer.style.display = "block";
-}).catch((message) => {
-    console.error("Unity Loading Failed:", message);
-    loadingText.textContent = "Error loading game"; // Friendly error display
-});
+    createUnityInstance(unityCanvas, config, (progress) => {
+    }).then((unityInstance) => {
+      // Success: Unity is fully loaded and initialized
+      myGameInstance = unityInstance;
+
+      startScreen.classList.add("fade-out");
+
+      startScreen.style.display = "none";
+      unityContainer.style.display = "block";
+
+      // Send token immediately once visible
+      sendTokenToUnity();
+    })
+      .catch((message) => {
+        console.error("Unity Loading Failed:", message);
+      });
+
+    // Send the token of the user back to unity once the game instance is created
+    function sendTokenToUnity() {
+      if (userToken && myGameInstance) {
+        console.log("Sending token:", userToken);
+        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
+      }
+    }
+
+    // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
+    function sendAppStateToUnity() {
+      window.onFlutterMessage = function (msg) {
+        const state = JSON.stringify(msg);
+        console.log('Received message from Flutter:', msg);
+
+        if (myGameInstance)
+          myGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
+
+        if (msg.action === 'pause') {
+          // Pause game/audio
+          console.log('Pausing due to', msg.reason);
+        }
+      };
+    }
 
   </script>
 </body>
