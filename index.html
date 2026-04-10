@@ -64,10 +64,8 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Uni-Jump",
-    productVersion: "1.2.0 (3)",
+    productVersion: "1.2.0 (4)",
 };
-
-    sendAppStateToUnity();
 
     createUnityInstance(unityCanvas, config, (progress) => {
     }).then((unityInstance) => {
@@ -78,37 +76,10 @@
 
       startScreen.style.display = "none";
       unityContainer.style.display = "block";
-
-      // Send token immediately once visible
-      sendTokenToUnity();
     })
       .catch((message) => {
         console.error("Unity Loading Failed:", message);
       });
-
-    // Send the token of the user back to unity once the game instance is created
-    function sendTokenToUnity() {
-      if (userToken && myGameInstance) {
-        console.log("Sending token:", userToken);
-        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
-      }
-    }
-
-    // Gets the state of flutter app then send the state back to unity to pause and unpase the audio
-    function sendAppStateToUnity() {
-      window.onFlutterMessage = function (msg) {
-        const state = JSON.stringify(msg);
-        console.log('Received message from Flutter:', msg);
-
-        if (myGameInstance)
-          myGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
-
-        if (msg.action === 'pause') {
-          // Pause game/audio
-          console.log('Pausing due to', msg.reason);
-        }
-      };
-    }
 
   </script>
 </body>
