@@ -54,9 +54,6 @@
 
     let myGameInstance = null;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const userToken = urlParams.get("token");
-
     const config = {
       dataUrl: "Build/Web GL Testing Github.data",
       frameworkUrl: "Build/Web GL Testing Github.framework.js",
@@ -64,7 +61,7 @@
     streamingAssetsUrl: "StreamingAssets",
     companyName: "HSI",
     productName: "Uni-Jump",
-    productVersion: "1.2.0 (4)",
+    productVersion: "1.2.0 (5)",
 };
 
     createUnityInstance(unityCanvas, config, (progress) => {
