@@ -7,9 +7,27 @@
   <title>Unity WebGL Player | Unleash Play</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
+  <style>
+    html, body { 
+      overflow: hidden; 
+      position: fixed; 
+      width: 100%; 
+      height: 100%; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-overflow-scrolling: touch; 
+    }
+    #start-screen[style*="display: none"] { 
+      pointer-events: none; 
+    }
+  </style>
 </head>
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+
+  <!-- Full-screen hidden proxy -->
+  <input type="text" id="unity-keyboard-proxy" autocomplete="off" inputmode="text" enterkeyhint="done"
+    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.01; font-size: 16px; z-index: 1; display: none;">
 
   <div id="start-screen">
     <div id="background-icons">
@@ -19,99 +37,197 @@
   </div>
 
   <div id="unity-container" style="display: none;">
-    <canvas id="unity-canvas" width=540 height=960 tabindex="-1"
+    <canvas id="unity-canvas" width="540" height="960" tabindex="-1"
       style="width: 540px; height: 960px; background: #231F20"></canvas>
   </div>
 
-  <script src="Build/Web GL Testing Github.loader.js"></script>
+  <script src="Build/Web GL for QA.loader.js"></script>
 
   <script>
+    window.unityInputRect = null;
 
-    // Mobile viewport handling
+    // Fast console log interceptor
+    const originalConsoleLog = console.log;
+    console.log = function(...args) {
+      originalConsoleLog.apply(console, args);
+      if (args[0] && typeof args[0] === 'string' && args[0].startsWith("[INPUT_RECT]:")) {
+        const [minX, minY, maxX, maxY] = args[0].substring(13).split(",").map(parseFloat);
+        window.unityInputRect = { minX, minY, maxX, maxY };
+      }
+    };
+
+    // Mobile Viewport Locks & Resize Defenses
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      var meta = document.createElement('meta');
+      const meta = document.createElement('meta');
       meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
+      document.head.appendChild(meta);
 
-      var canvas = document.querySelector("#unity-canvas");
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.position = "fixed";
+      const canvas = document.querySelector("#unity-canvas");
+      Object.assign(canvas.style, { 
+        width: window.innerWidth + 'px', 
+        height: window.innerHeight + 'px', 
+        position: 'fixed', 
+        top: '0', 
+        left: '0' 
+      });
       document.body.style.textAlign = "left";
     }
 
-    // DOM Elements
     const startScreen = document.querySelector("#start-screen");
     const unityContainer = document.querySelector("#unity-container");
     const unityCanvas = document.querySelector("#unity-canvas");
     const loadingText = document.querySelector("#loading-text");
-
-    let myGameInstance = null;
-
-    // Get token from URL
+    const keyboardProxy = document.querySelector("#unity-keyboard-proxy");
     const urlParams = new URLSearchParams(window.location.search);
     const userToken = urlParams.get("token");
+    let myGameInstance = null;
 
-    // Unity Configuration
     const config = {
-      dataUrl: "Build/Web GL Testing Github.data",
-      frameworkUrl: "Build/Web GL Testing Github.framework.js",
-      codeUrl: "Build/Web GL Testing Github.wasm",
+      dataUrl: "Build/Web GL for QA.data",
+      frameworkUrl: "Build/Web GL for QA.framework.js",
+      codeUrl: "Build/Web GL for QA.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HSI",
       productName: "Unleash Play",
-      productVersion: "1.3.1 (229)",
+      productVersion: "1.3.1 (274)",
+      devicePixelRatio: window.devicePixelRatio || 1
     };
 
-    // Send app state (Flutter <-> Unity communication)
     function sendAppStateToUnity() {
-      window.onFlutterMessage = function (msg) {
-        console.log('Received message from Flutter:', msg);
-
-        if (myGameInstance) {
-          const state = JSON.stringify(msg);
-          myGameInstance.SendMessage("Sound Handler", "ReceiveValue", state);
-        }
+      window.onFlutterMessage = (msg) => {
+        if (myGameInstance) myGameInstance.SendMessage("Sound Handler", "ReceiveValue", JSON.stringify(msg));
       };
     }
 
-    // Send user token to Unity
     function sendTokenToUnity() {
-      if (userToken && myGameInstance) {
-        console.log("Sending token:", userToken);
-        myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
+      if (userToken && myGameInstance) myGameInstance.SendMessage("API Manager", "ReceiveToken", userToken);
+    }
+
+    function handleNativeScreenInteraction(e) {
+      if (!window.unityInputRect) return;
+
+      const touch = (e.touches && e.touches.length > 0) ? e.touches[0] :
+                    (e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0] : e;
+
+      if (!touch || touch.clientX === undefined || touch.clientY === undefined) return;
+
+      const rect = unityCanvas.getBoundingClientRect();
+      const touchX = (touch.clientX - rect.left) / rect.width;
+      const touchY = (touch.clientY - rect.top) / rect.height;
+
+      if (touchX >= window.unityInputRect.minX && touchX <= window.unityInputRect.maxX &&
+          touchY >= window.unityInputRect.minY && touchY <= window.unityInputRect.maxY) {
+        
+        keyboardProxy.blur();
+        keyboardProxy.style.display = 'block';
+        keyboardProxy.value = '';
+        
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (isIOS) {
+          keyboardProxy.setAttribute('readonly', 'readonly');
+          keyboardProxy.focus();
+          keyboardProxy.removeAttribute('readonly');
+          keyboardProxy.focus();
+        } else {
+          keyboardProxy.removeAttribute('readonly');
+          keyboardProxy.focus();
+        }
+        keyboardProxy.click();
       }
     }
 
-    // Initialize Unity with loading progress
+    // Creates or re-creates the transparent gesture overlay to re-arm the WebView
+    function createArmOverlay() {
+      if (document.getElementById('flutter-arm-overlay')) return;
+
+      const armOverlay = document.createElement('div');
+      armOverlay.id = 'flutter-arm-overlay';
+      armOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:transparent;';
+      document.body.appendChild(armOverlay);
+
+      const armWebViewOnce = (e) => {
+        if (keyboardProxy) {
+          keyboardProxy.style.display = 'block';
+          keyboardProxy.focus();
+          keyboardProxy.blur();
+          keyboardProxy.style.display = 'none';
+        }
+        const overlayEl = document.getElementById('flutter-arm-overlay');
+        if (overlayEl) overlayEl.remove(); 
+        
+        // Forward interaction so the same tap unpauses Unity and checks hitboxes
+        handleNativeScreenInteraction(e);
+      };
+
+      ['touchstart', 'pointerdown', 'click'].forEach(evt => {
+        armOverlay.addEventListener(evt, armWebViewOnce, evt === 'touchstart' ? { passive: true } : undefined);
+      });
+    }
+
+    // Listens for app minimize & restore cycles to re-arm WebViews automatically
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        createArmOverlay();
+      } else {
+        if (keyboardProxy) {
+          keyboardProxy.blur();
+          keyboardProxy.style.display = 'none';
+        }
+      }
+    });
+
     createUnityInstance(unityCanvas, config, (progress) => {
-      // Update loading percentage
-      const percentage = Math.round(progress * 100);
-      loadingText.textContent = `Loading pets: ${percentage}%`;
+      loadingText.textContent = `Loading pets: ${Math.round(progress * 100)}%`;
     })
     .then((unityInstance) => {
-      // Game successfully loaded
       myGameInstance = unityInstance;
-
-      console.log("Unity WebGL instance created successfully");
-
-      // Instantly hide loading screen and show game (no fade)
-      startScreen.style.display = "none";
+      if (startScreen) startScreen.remove(); 
       unityContainer.style.display = "block";
-
-      // Send token after game is visible
       sendTokenToUnity();
+
+      // Arm WebView on initial boot
+      createArmOverlay();
+
+      if (keyboardProxy) {
+        ['touchstart', 'pointerdown', 'click'].forEach(evt => {
+          unityCanvas.addEventListener(evt, handleNativeScreenInteraction, evt === 'touchstart' ? { passive: true } : undefined);
+        });
+
+        // Forward raw keyboard events (Backspace, Enter, Spaces, etc.)
+        ['keydown', 'keyup'].forEach(eventType => {
+          keyboardProxy.addEventListener(eventType, (e) => {
+            if (myGameInstance) {
+              window.dispatchEvent(new KeyboardEvent(eventType, {
+                key: e.key,
+                code: e.code,
+                keyCode: e.keyCode,
+                which: e.which,
+                bubbles: true
+              }));
+            }
+          });
+        });
+
+        // Support pasted text or autocomplete suggestions
+        keyboardProxy.addEventListener('input', (e) => {
+          if (myGameInstance && e.inputType === "insertFromPaste") {
+            for (let char of (e.data || '')) {
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: char, bubbles: true }));
+            }
+          }
+        });
+
+        keyboardProxy.addEventListener('blur', () => keyboardProxy.style.display = 'none');
+      }
     })
-    .catch((message) => {
-      console.error("Unity Loading Failed:", message);
+    .catch((err) => {
+      console.error(err);
       loadingText.textContent = "Failed to load the game. Please refresh.";
       loadingText.style.color = "#ff4444";
     });
 
-    // Initialize Flutter communication
     sendAppStateToUnity();
-
   </script>
 </body>
 
